@@ -1,0 +1,4 @@
+Series,Min Ramp (MW/h),P1 (Extreme Drop),P5,Median (P50),P95,P99 (Extreme Surge),Max Ramp (MW/h),Std Dev (MW/h)
+Solar Power,-1125.5,-530.2,-397.9,0.0,408.5,530.2,1114.6,215.9
+System Demand,-3309.1,-1364.4,-1047.3,-27.1,1083.3,1381.5,2172.6,615.6
+Net Load,-3309.1,-1367.5,-1051.3,-30.6,1014.8,1308.5,2076.3,628.6

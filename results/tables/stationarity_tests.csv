@@ -1,0 +1,5 @@
+Series Name,ADF Statistic,p-value,Used Lags,Num Observations,Critical 1%,Critical 5%,Stationary (alpha=0.05)
+Solar Power (Levels),-17.1277,0.0,54,43769,-3.4305,-2.8616,YES
+Demand (Levels),-6.5399,0.0,55,43768,-3.4305,-2.8616,YES
+Demand (1st Difference),-36.388,0.0,55,43767,-3.4305,-2.8616,YES
+Net Load (Levels),-6.8074,0.0,55,43768,-3.4305,-2.8616,YES
