@@ -61,6 +61,7 @@ MAJOR PROJECT/
 ├── src/
 │   ├── config.py            # Central parameters, paths, split dates, 47-model tiers
 │   ├── preprocess.py        # Cleaning, physical bounds, reindexing, outlier & fill flags
+│   ├── eda.py               # 8 diagnostic plotting functions and findings generator
 │   ├── features.py          # Lags, rolling statistics, solar geometry, cyclical time
 │   ├── metrics.py           # RMSE, MAE, nMAE, MAPE (demand), sMAPE, R2, skill, pinball
 │   ├── models_stat.py       # Linear, SARIMAX, Holt-Winters, Prophet
@@ -74,6 +75,7 @@ MAJOR PROJECT/
 │   ├── test_environment.py
 │   ├── test_audit.py
 │   ├── test_preprocess.py
+│   ├── test_eda.py
 │   ├── test_features.py
 │   └── test_split.py
 ├── results/
@@ -112,5 +114,6 @@ uv pip install -r requirements.txt --python .venv\Scripts\python.exe
 | **Commit 1 (`4a1486f`)** | **M0: Setup** | Initialized repository layout, Python 3.12 virtual environment, `src/config.py`, copied raw `final_dataset.csv`, pinned `requirements.txt`, and wrote `tests/test_environment.py`. | **VERIFIED (19/19 Tests Pass)** |
 | **Commit 1 (`4a1486f`)** | **M1: Data Audit** | Implemented `src/audit.py`, generated `results/tables/data_audit.md`, created `notebooks/00_data_audit.ipynb`, verified 43,824 rows, 0 gaps, 0 duplicates, night solar = 0, and passed `tests/test_audit.py`. | **VERIFIED (22/22 Tests Pass)** |
 | **Commit 2 (`f199592`)** | **Roadmap Update & Remote Sync** | Synced repository with GitHub remote `eveRsor47/Major-project`, updated `src/config.py` with 47-model multi-tier taxonomy, installed `shap`, and documented workflow. | **VERIFIED (22/22 Tests Pass)** |
-| **Commit 3 (Current)** | **M2: Preprocessing** | Implemented `src/preprocess.py`, full hourly reindexing, physical limit clipping (night solar = 0, solar $\le 2050$ MW, humidity $[0, 100]\%$, GHI capped), robust rolling MAD demand outlier detection (80 flagged), localized interpolation + seasonal recurrence (482 imputed, `is_filled=1`), dropped leaky target derivatives and unneeded constants, exported `clean_hourly.csv` and `.parquet`, created `notebooks/01_preprocessing.ipynb`, and added `tests/test_preprocess.py`. | **VERIFIED (26/26 Tests Pass)** |
-| *Upcoming* | **M3: EDA** | 8 standard diagnostic plots (seasonal profiles, demand vs temp, solar vs GHI, duck curve preview, etc.), findings list, and `notebooks/02_eda.ipynb`. | *Pending Review* |
+| **Commit 3 (`593fe92`)** | **M2: Preprocessing** | Implemented `src/preprocess.py`, full hourly reindexing, physical limit clipping (night solar = 0, solar $\le 2050$ MW, humidity $[0, 100]\%$, GHI capped), robust rolling MAD demand outlier detection (80 flagged), localized interpolation + seasonal recurrence (482 imputed, `is_filled=1`), dropped leaky target derivatives and unneeded constants, exported `clean_hourly.csv` and `.parquet`, created `notebooks/01_preprocessing.ipynb`, and added `tests/test_preprocess.py`. | **VERIFIED (26/26 Tests Pass)** |
+| **Commit 4 (Current)** | **M3: EDA** | Built `src/eda.py`, generated all 8 publication-grade diagnostic plots in `results/figures/`, created `results/tables/eda_findings.md` with core viva/report findings, created `notebooks/02_eda.ipynb`, added `tests/test_eda.py`. | **VERIFIED (28/28 Tests Pass)** |
+| *Upcoming* | **M4: Features & Splits** | Feature engineering in `src/features.py` (lags $\ge$ horizon, rolling stats on shifted targets, solar geometry, cyclical encodings), sequence builders, leak-proof temporal splits, and `tests/test_features.py`. | *Pending Review* |
