@@ -60,7 +60,7 @@ MAJOR PROJECT/
 │   └── 09_final_results.ipynb
 ├── src/
 │   ├── config.py            # Central parameters, paths, split dates, 47-model tiers
-│   ├── preprocess.py        # Cleaning, physical bounds, reindexing, outage flags
+│   ├── preprocess.py        # Cleaning, physical bounds, reindexing, outlier & fill flags
 │   ├── features.py          # Lags, rolling statistics, solar geometry, cyclical time
 │   ├── metrics.py           # RMSE, MAE, nMAE, MAPE (demand), sMAPE, R2, skill, pinball
 │   ├── models_stat.py       # Linear, SARIMAX, Holt-Winters, Prophet
@@ -89,19 +89,17 @@ MAJOR PROJECT/
 
 ## 4. Git Collaboration & Remote Setup
 
-To collaborate with a friend or push to GitHub:
+To collaborate with a friend or pull the latest changes:
 ```powershell
-# 1. Create an empty repository on GitHub (e.g., 'pavagada-forecast')
-# 2. Add the remote and push all existing milestones:
-git remote add origin https://github.com/<your-username>/<repo-name>.git
-git branch -M main
-git push -u origin main
+# Clone the repository:
+git clone https://github.com/eveRsor47/Major-project.git
+cd Major-project
 
-# For your friend to clone and run:
-git clone https://github.com/<your-username>/<repo-name>.git
-cd <repo-name>
+# Setup virtual environment:
 uv venv .venv --python 3.12
 uv pip install -r requirements.txt --python .venv\Scripts\python.exe
+
+# Run test suite:
 .venv\Scripts\pytest -v
 ```
 
@@ -113,5 +111,6 @@ uv pip install -r requirements.txt --python .venv\Scripts\python.exe
 | :--- | :--- | :--- | :--- |
 | **Commit 1 (`4a1486f`)** | **M0: Setup** | Initialized repository layout, Python 3.12 virtual environment, `src/config.py`, copied raw `final_dataset.csv`, pinned `requirements.txt`, and wrote `tests/test_environment.py`. | **VERIFIED (19/19 Tests Pass)** |
 | **Commit 1 (`4a1486f`)** | **M1: Data Audit** | Implemented `src/audit.py`, generated `results/tables/data_audit.md`, created `notebooks/00_data_audit.ipynb`, verified 43,824 rows, 0 gaps, 0 duplicates, night solar = 0, and passed `tests/test_audit.py`. | **VERIFIED (22/22 Tests Pass)** |
-| **Commit 2 (Current)** | **Updated Roadmap & Workspace Migration** | Shifted project to `C:\Users\footc\OneDrive\Desktop\MAJOR PROJECT`, updated `src/config.py` for 47 models across 3 tiers, added `shap`, and updated `README.md` with git collaboration workflow. | **VERIFIED (22/22 Tests Pass)** |
-| *Upcoming* | **M2: Preprocessing** | Implementation of `src/preprocess.py`, robust z-score outlier detection, short-window interpolation, physical capping, and export to `clean_hourly.csv` and `.parquet`. | *Pending Review* |
+| **Commit 2 (`f199592`)** | **Roadmap Update & Remote Sync** | Synced repository with GitHub remote `eveRsor47/Major-project`, updated `src/config.py` with 47-model multi-tier taxonomy, installed `shap`, and documented workflow. | **VERIFIED (22/22 Tests Pass)** |
+| **Commit 3 (Current)** | **M2: Preprocessing** | Implemented `src/preprocess.py`, full hourly reindexing, physical limit clipping (night solar = 0, solar $\le 2050$ MW, humidity $[0, 100]\%$, GHI capped), robust rolling MAD demand outlier detection (80 flagged), localized interpolation + seasonal recurrence (482 imputed, `is_filled=1`), dropped leaky target derivatives and unneeded constants, exported `clean_hourly.csv` and `.parquet`, created `notebooks/01_preprocessing.ipynb`, and added `tests/test_preprocess.py`. | **VERIFIED (26/26 Tests Pass)** |
+| *Upcoming* | **M3: EDA** | 8 standard diagnostic plots (seasonal profiles, demand vs temp, solar vs GHI, duck curve preview, etc.), findings list, and `notebooks/02_eda.ipynb`. | *Pending Review* |

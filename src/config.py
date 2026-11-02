@@ -156,12 +156,14 @@ LEAKY_COLUMNS: List[str] = [
     "shortage_mw",
 ]
 
-# Static constants or generator internals to drop
+# Static constants, metadata, or generator internals to drop
 COLUMNS_TO_DROP: List[str] = [
     "installed_capacity_mw_ac",
     "installed_capacity_mw_dc",
     "dc_ac_ratio",
     "data_type",
+    "data_source_weather",
+    "data_source_demand",
     "generation_method",
     "timestamp_utc",
     "soiling_loss_pct",
