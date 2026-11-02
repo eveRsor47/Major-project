@@ -1,15 +1,13 @@
-"""Project configuration module for Pavagada Solar + Load Forecasting.
+﻿"""Project configuration module for Pavagada Solar + Load Forecasting.
 
 Centralizes paths, target definitions, split dates, random seeds,
-and plant specifications as defined in the project roadmap.
+model tier mappings, and plant specifications according to the updated roadmap.
 """
 
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Any
 
-# ---------------------------------------------------------------------------
 # Base Directories
-# ---------------------------------------------------------------------------
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 DATA_DIR = PROJECT_ROOT / "data"
@@ -27,8 +25,7 @@ RAW_DATA_FILE = RAW_DATA_DIR / "final_dataset.csv"
 CLEAN_DATA_CSV = INTERIM_DATA_DIR / "clean_hourly.csv"
 CLEAN_DATA_PARQUET = INTERIM_DATA_DIR / "clean_hourly.parquet"
 
-# Ensure runtime directories exist
-for _dir in [
+for d in [
     RAW_DATA_DIR,
     INTERIM_DATA_DIR,
     PROCESSED_DATA_DIR,
@@ -37,44 +34,32 @@ for _dir in [
     RESULTS_MODELS_DIR,
     RESULTS_PREDICTIONS_DIR,
 ]:
-    _dir.mkdir(parents=True, exist_ok=True)
+    d.mkdir(parents=True, exist_ok=True)
 
-# ---------------------------------------------------------------------------
 # Project Constants & Specifications
-# ---------------------------------------------------------------------------
 RANDOM_SEED: int = 42
-
-# Pavagada Solar Park (Karnataka) specifications
 PLANT_CAPACITY_MW: float = 2050.0
 PLANT_LATITUDE: float = 14.281
 PLANT_LONGITUDE: float = 77.425
 PLANT_ALTITUDE_M: float = 600.0
 TIMEZONE: str = "Asia/Kolkata"
 
-# Primary targets
 TARGET_SOLAR: str = "solar_power_mw"
 TARGET_DEMAND: str = "demand_mw"
 TARGET_NET_LOAD: str = "net_load_mw"
 
-# ---------------------------------------------------------------------------
 # Time Splits (Strict Chronological, Never Shuffled)
-# ---------------------------------------------------------------------------
-# Train: Start (2021-03-01 00:00 IST) through 2024-12-31 23:00 IST
 TRAIN_START_DATE: str = "2021-03-01 00:00:00"
 TRAIN_END_DATE: str = "2024-12-31 23:00:00"
 
-# Validation: 2025-01-01 00:00 IST through 2025-12-31 23:00 IST
 VAL_START_DATE: str = "2025-01-01 00:00:00"
 VAL_END_DATE: str = "2025-12-31 23:00:00"
 
-# Test: 2026-01-01 00:00 IST onward (evaluated only in M10)
 TEST_START_DATE: str = "2026-01-01 00:00:00"
 TEST_END_DATE: str = "2026-02-28 23:00:00"
 
-# ---------------------------------------------------------------------------
-# Problem Definitions
-# ---------------------------------------------------------------------------
-PROBLEMS: Dict[str, Dict[str, object]] = {
+# The Four Forecasting Problems
+PROBLEMS: Dict[str, Dict[str, Any]] = {
     "S1": {
         "target": TARGET_SOLAR,
         "horizon_hours": 1,
@@ -97,10 +82,58 @@ PROBLEMS: Dict[str, Dict[str, object]] = {
     },
 }
 
-# ---------------------------------------------------------------------------
-# Data Columns Hygiene
-# ---------------------------------------------------------------------------
-# Timestamp column names (format: DD-MM-YY H:MM in raw file)
+# 47 Models Multi-Tier Roadmap Taxonomy
+MODEL_TIERS: Dict[str, Dict[str, List[str]]] = {
+    "Tier 1": {
+        "baselines": [
+            "persistence_t1",
+            "persistence_t24",
+            "persistence_t168",
+            "clearsky",
+            "smart_persistence",
+            "mean_t24_t168",
+        ],
+        "linear_stat": ["linear", "ridge", "lasso"],
+        "classic_ml": ["random_forest", "xgboost", "lightgbm", "catboost", "mlp"],
+        "deep_learning": ["lstm", "gru", "cnn_lstm"],
+        "probabilistic": ["quantile_lightgbm", "quantile_xgboost"],
+    },
+    "Tier 2": {
+        "linear_stat": ["elasticnet", "huber", "sarimax", "prophet"],
+        "classic_ml": [
+            "extra_trees",
+            "hist_gradient_boosting",
+            "gradient_boosting",
+            "svr",
+            "knn",
+        ],
+        "deep_learning": [
+            "stacked_lstm",
+            "bi_lstm",
+            "bi_gru",
+            "cnn_1d",
+            "cnn_gru",
+            "lstm_attention",
+            "tcn",
+            "dlinear",
+            "nhits",
+        ],
+    },
+    "Tier 3": {
+        "linear_stat": ["ransac", "holt_winters"],
+        "classic_ml": ["decision_tree", "bagging", "adaboost"],
+        "deep_learning": [
+            "seq2seq",
+            "transformer_encoder",
+            "informer",
+            "patchtst",
+            "tft",
+            "nbeats",
+        ],
+        "probabilistic": ["ngboost", "deepar"],
+    },
+}
+
 TIMESTAMP_COL: str = "timestamp_ist"
 TIMESTAMP_RAW_FORMAT: str = "%d-%m-%y %H:%M"
 

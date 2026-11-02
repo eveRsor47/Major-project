@@ -1,70 +1,117 @@
-# Renewable Energy-Aware Load Prediction Model for Smart Grids
+﻿# Renewable Energy-Aware Load Prediction Model for Smart Grids
 **Focus Case Study: Pavagada Solar Park (2,050 MW), Tumkur District, Karnataka**
-
-## 1. Project Overview
-This project develops an end-to-end time-series forecasting framework designed for modern power grid dispatch operations. It addresses three interconnected forecasting challenges:
-1. **Solar Power Generation Forecasting ($P_{\text{solar}}$)**: Anticipating generation across Pavagada Solar Park.
-2. **System Demand Forecasting ($P_{\text{demand}}$)**: Modeling load across Karnataka driven by diurnal habits and temperature.
-3. **Net Load Prediction ($P_{\text{net}} = P_{\text{demand}} - P_{\text{solar}}$)**: Quantifying residual power required from conventional dispatchable power plants to prepare for evening ramps (the "duck curve").
-
-> [!NOTE]
-> **Data Disclosure**: The underlying dataset contains hourly simulated data ($N = 43,824$ records from 2021-03-01 to 2026-02-28 IST). Solar numbers are generated from weather physics; models achieve high accuracy on physics-derived data, demonstrating pipeline correctness.
 
 ---
 
-## 2. Project Architecture & Directory Layout
+## 1. Project Overview & Multi-Tier Architecture
+This project develops an end-to-end, reproducible time-series forecasting framework designed for modern power grid dispatch operations. It addresses three interconnected forecasting challenges:
+1. **Solar Power Generation ($P_{\text{solar}}$)**: Anticipating generation across Pavagada Solar Park (Tumkur, Karnataka).
+2. **System Demand ($P_{\text{demand}}$)**: Modeling statewide load driven by diurnal habits and temperature.
+3. **Net Load ($P_{\text{net}} = P_{\text{demand}} - P_{\text{solar}}$)**: Quantifying the residual power required from conventional dispatchable power plants to prepare for evening ramps (the "duck curve").
+
+> [!NOTE]
+> **Data Disclosure**: The underlying dataset contains hourly simulated data ($N = 43,824$ records from 2021-03-01 to 2026-02-28 IST). Solar figures are generated from weather physics; models achieve high accuracy on physics-derived data, demonstrating pipeline correctness.
+
+---
+
+## 2. Updated 47-Model Funnel & Tier Structure
+
+Models are evaluated across 4 problems (**S1, S24, D1, D24**) through a validation funnel:
+- **Tier 1 (Mandatory - Must Train First)**:
+  - **Baselines (6)**: Persistence ($t-1$ for 1h, $t-24$ for solar/demand, $t-168$ seasonal naive, Clear-sky, Smart persistence, Mean of $t-24$ & $t-168$).
+  - **Linear & Statistical (3)**: Linear Regression, Ridge, Lasso.
+  - **Classic ML (5)**: Random Forest, XGBoost, LightGBM, CatBoost, MLP.
+  - **Deep Learning (3)**: LSTM, GRU, CNN-LSTM.
+  - **Probabilistic (2)**: Quantile LightGBM, Quantile XGBoost (P10, P50, P90).
+- **Tier 2 (Should - Evaluated after Tier 1 Review)**:
+  - **Linear & Statistical**: ElasticNet, Huber, SARIMAX (subset/daily), Prophet.
+  - **Classic ML**: Extra Trees, HistGradientBoosting, Gradient Boosting, SVR, KNN.
+  - **Deep Learning**: Stacked LSTM, Bi-LSTM, Bi-GRU, 1D-CNN, CNN-GRU, LSTM with attention, TCN, DLinear, N-HiTS.
+- **Tier 3 (Stretch / Future Work)**:
+  - RANSAC, Holt-Winters (ETS), Decision Tree, Bagging, AdaBoost, Seq2Seq, Transformer encoder, Informer, PatchTST, TFT, N-BEATS, NGBoost, DeepAR.
+
+### Funnel & Ensemble Policy
+1. **Screening**: Screen Tier 1 and Tier 2 models with default hyperparameters on validation (2025).
+2. **Shortlisting**: Retain top 8 models per problem.
+3. **Tuning**: Tune top 3 with Optuna (30–50 trials) using `TimeSeriesSplit` on train only.
+4. **Pruning Rule**: Calculate pairwise validation residual correlation; if $\rho > 0.95$, retain only the stronger model to guarantee diversity.
+5. **Ensembles**: Simple Average $\to$ Non-negative Weighted Average $\to$ Ridge Stacking (fitted on out-of-fold walk-forward predictions) $\to$ Hybrid (XGBoost + LSTM on residuals).
+
+---
+
+## 3. Directory & Notebook Layout
 ```
-pavagada-forecast/
+MAJOR PROJECT/
 ├── data/
-│   ├── raw/                 # Original untouched dataset (final_dataset.csv)
+│   ├── raw/                 # Untouched original file (final_dataset.csv)
 │   ├── interim/             # Cleaned hourly dataset (clean_hourly.csv, .parquet)
-│   └── processed/           # Scaled, lagged, train/val/test splits & sequences
-├── notebooks/               # Thin, explanatory Jupyter notebooks (00 to 09)
+│   └── processed/           # Model-ready features, train/val/test splits & sequences
+├── notebooks/
+│   ├── 00_data_audit.ipynb
+│   ├── 01_preprocessing.ipynb
+│   ├── 02_eda.ipynb
+│   ├── 03_features_and_splits.ipynb
+│   ├── 04_baselines.ipynb
+│   ├── 05a_linear_statistical.ipynb
+│   ├── 05b_classic_ml.ipynb
+│   ├── 06_dl_models.ipynb
+│   ├── 07_tuning_ensemble.ipynb
+│   ├── 08_net_load.ipynb
+│   └── 09_final_results.ipynb
 ├── src/
-│   ├── __init__.py
-│   ├── config.py            # Central parameters, paths, split dates, random seed
+│   ├── config.py            # Central parameters, paths, split dates, 47-model tiers
 │   ├── preprocess.py        # Cleaning, physical bounds, reindexing, outage flags
 │   ├── features.py          # Lags, rolling statistics, solar geometry, cyclical time
-│   ├── metrics.py           # RMSE, MAE, nMAE (by capacity), sMAPE, R2, skill score
-│   ├── models_ml.py         # Tabular ML pipelines (Ridge, RF, XGB, LGBM, CatBoost)
-│   ├── models_dl.py         # PyTorch sequence models (LSTM, GRU, CNN-LSTM)
-│   └── evaluate.py          # Unified evaluation harness
-├── tests/                   # Pytest test suite (leakage tests, preprocessing, splits)
+│   ├── metrics.py           # RMSE, MAE, nMAE, MAPE (demand), sMAPE, R2, skill, pinball
+│   ├── models_stat.py       # Linear, SARIMAX, Holt-Winters, Prophet
+│   ├── models_ml.py         # Sklearn, XGBoost, LightGBM, CatBoost
+│   ├── models_dl.py         # LSTM, GRU, CNN-LSTM sequence builders
+│   ├── models_prob.py       # Quantile models, NGBoost, DeepAR
+│   ├── ensemble.py          # Averaging, stacking, hybrid, correlation pruning
+│   ├── audit.py             # Data verification and audit report engine
+│   └── evaluate.py          # Unified scoring harness
+├── tests/
+│   ├── test_environment.py
+│   ├── test_audit.py
+│   ├── test_preprocess.py
+│   ├── test_features.py
+│   └── test_split.py
 ├── results/
 │   ├── tables/              # Evaluation tables, audit logs, and summaries
 │   ├── figures/             # Diagnostic plots, error distributions, duck curve
 │   ├── models/              # Saved model checkpoints and scalers (joblib / pt)
 │   └── predictions/         # Out-of-fold and test predictions
-├── requirements.txt         # Pinned project dependencies
+├── requirements.txt
 └── README.md
 ```
 
 ---
 
-## 3. Milestones Roadmap (M0 to M11)
-- **M0: Setup & Environment**: Repository structure, virtual environment, configuration, and import verification. *(Current)*
-- **M1: Data Audit**: Comprehensive inspection of raw records, schemas, missing values, and physical checks.
-- **M2: Preprocessing**: Timezone alignment, gap filling, physical capping, and flag preservation.
-- **M3: Exploratory Data Analysis**: Seasonal profiles, weather-demand interactions, and duck curve preview.
-- **M4: Features & Splits**: Strict chronological splitting (Train $\le$ 2024, Val = 2025, Test $\ge$ 2026), leak-free lags ($\ge$ horizon), rolling statistics, and sequence windowing.
-- **M5: Baselines**: Persistence ($t-24$), seasonal naive ($t-168$), and clear-sky scaling baselines.
-- **M6: Machine Learning Models**: Ridge, Random Forest, XGBoost, LightGBM, CatBoost, and MLP across 4 problems ($S_1, S_{24}, D_1, D_{24}$).
-- **M7: Deep Learning Models**: LSTM, GRU, Bi-LSTM, 1D-CNN, and CNN-LSTM architectures.
-- **M8: Ensembles & Hyperparameter Tuning**: Optuna hyperparameter optimization, stacking, weighted ensembles, and walk-forward CV.
-- **M9: Net Load Integration**: Approach A (separate subtraction) vs Approach B (direct prediction) vs Demand-only baseline.
-- **M10: Final Test Evaluation**: Single-pass evaluation on unseen 2026 test set.
-- **M11: Final Report, Viva Prep & Interactive Dashboard**: Project report, viva prep, and dashboard.
+## 4. Git Collaboration & Remote Setup
+
+To collaborate with a friend or push to GitHub:
+```powershell
+# 1. Create an empty repository on GitHub (e.g., 'pavagada-forecast')
+# 2. Add the remote and push all existing milestones:
+git remote add origin https://github.com/<your-username>/<repo-name>.git
+git branch -M main
+git push -u origin main
+
+# For your friend to clone and run:
+git clone https://github.com/<your-username>/<repo-name>.git
+cd <repo-name>
+uv venv .venv --python 3.12
+uv pip install -r requirements.txt --python .venv\Scripts\python.exe
+.venv\Scripts\pytest -v
+```
 
 ---
 
-## 4. Setup & Quickstart
+## 5. Project Changelog & Commit History
 
-### Environment Setup
-```powershell
-# Create virtual environment and install dependencies
-uv venv .venv --python 3.12
-uv pip install -r requirements.txt --python .venv\Scripts\python.exe
-
-# Run test suite
-.venv\Scripts\pytest -v
-```
+| Commit / Push | Milestone | Scope & Deliverables | Status |
+| :--- | :--- | :--- | :--- |
+| **Commit 1 (`4a1486f`)** | **M0: Setup** | Initialized repository layout, Python 3.12 virtual environment, `src/config.py`, copied raw `final_dataset.csv`, pinned `requirements.txt`, and wrote `tests/test_environment.py`. | **VERIFIED (19/19 Tests Pass)** |
+| **Commit 1 (`4a1486f`)** | **M1: Data Audit** | Implemented `src/audit.py`, generated `results/tables/data_audit.md`, created `notebooks/00_data_audit.ipynb`, verified 43,824 rows, 0 gaps, 0 duplicates, night solar = 0, and passed `tests/test_audit.py`. | **VERIFIED (22/22 Tests Pass)** |
+| **Commit 2 (Current)** | **Updated Roadmap & Workspace Migration** | Shifted project to `C:\Users\footc\OneDrive\Desktop\MAJOR PROJECT`, updated `src/config.py` for 47 models across 3 tiers, added `shap`, and updated `README.md` with git collaboration workflow. | **VERIFIED (22/22 Tests Pass)** |
+| *Upcoming* | **M2: Preprocessing** | Implementation of `src/preprocess.py`, robust z-score outlier detection, short-window interpolation, physical capping, and export to `clean_hourly.csv` and `.parquet`. | *Pending Review* |
