@@ -1,4 +1,4 @@
-﻿from pathlib import Path
+from pathlib import Path
 import pandas as pd
 from src import config
 from src.eda import run_eda_pipeline, run_stationarity_tests, plot_ramp_rate_distribution
@@ -18,7 +18,9 @@ def test_eda_figures_generated():
         "fig10_ramp_rate_distribution.png",
     ]
     for fig_name in expected_figs:
-        fig_path = config.RESULTS_FIGURES_DIR / fig_name
+        fig_path = config.FIGURES_EDA_DIR / fig_name if hasattr(config, "FIGURES_EDA_DIR") else config.RESULTS_FIGURES_DIR / fig_name
+        if not fig_path.exists():
+            fig_path = config.RESULTS_FIGURES_DIR / fig_name
         assert fig_path.exists(), f"Missing figure: {fig_name}"
         assert fig_path.stat().st_size > 10000, f"Figure too small: {fig_name}"
 

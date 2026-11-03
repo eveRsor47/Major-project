@@ -1,4 +1,4 @@
-﻿"""Project configuration module for Pavagada Solar + Load Forecasting.
+"""Project configuration module for Pavagada Solar + Load Forecasting.
 
 Centralizes paths, target definitions, split dates, random seeds,
 model tier mappings, and plant specifications according to the updated roadmap.
@@ -18,6 +18,10 @@ PROCESSED_DATA_DIR = DATA_DIR / "processed"
 RESULTS_DIR = PROJECT_ROOT / "results"
 RESULTS_TABLES_DIR = RESULTS_DIR / "tables"
 RESULTS_FIGURES_DIR = RESULTS_DIR / "figures"
+FIGURES_EDA_DIR = RESULTS_FIGURES_DIR / "eda"
+FIGURES_BASELINES_DIR = RESULTS_FIGURES_DIR / "baselines"
+FIGURES_LINEAR_DIR = RESULTS_FIGURES_DIR / "linear_statistical"
+FIGURES_CLASSIC_ML_DIR = RESULTS_FIGURES_DIR / "classic_ml"
 RESULTS_MODELS_DIR = RESULTS_DIR / "models"
 RESULTS_PREDICTIONS_DIR = RESULTS_DIR / "predictions"
 
@@ -31,6 +35,10 @@ for d in [
     PROCESSED_DATA_DIR,
     RESULTS_TABLES_DIR,
     RESULTS_FIGURES_DIR,
+    FIGURES_EDA_DIR,
+    FIGURES_BASELINES_DIR,
+    FIGURES_LINEAR_DIR,
+    FIGURES_CLASSIC_ML_DIR,
     RESULTS_MODELS_DIR,
     RESULTS_PREDICTIONS_DIR,
 ]:

@@ -191,9 +191,9 @@ Inspection of prediction tracking, residual distributions, and standardized feat
 
     cells.append(nbf.v4.new_code_cell(f"""for pid in problems:
     print(f"\\n{'='*70}\\nDIAGNOSTIC PLOTS FOR PROBLEM {{pid}}\\n{'='*70}")
-    fig_actual = config.RESULTS_FIGURES_DIR / f"{model_name}_{{pid}}_actual_vs_predicted.png"
-    fig_resid = config.RESULTS_FIGURES_DIR / f"{model_name}_{{pid}}_residuals_distribution.png"
-    fig_coef = config.RESULTS_FIGURES_DIR / f"{model_name}_{{pid}}_coefficients.png"
+    fig_actual = config.FIGURES_LINEAR_DIR / f"{model_name}_{{pid}}_actual_vs_predicted.png"
+    fig_resid = config.FIGURES_LINEAR_DIR / f"{model_name}_{{pid}}_residuals_distribution.png"
+    fig_coef = config.FIGURES_LINEAR_DIR / f"{model_name}_{{pid}}_coefficients.png"
     
     if fig_actual.exists():
         display(Image(filename=str(fig_actual)))
@@ -264,8 +264,8 @@ display(metrics_df)
         nbf.v4.new_markdown_cell("## 3. Diagnostic Visualizations"),
         nbf.v4.new_code_cell("""for pid in problems:
     print(f"\\n{'='*70}\\nDIAGNOSTIC PLOTS FOR PROBLEM {pid}\\n{'='*70}")
-    fig_actual = config.RESULTS_FIGURES_DIR / f"sarimax_{pid}_actual_vs_predicted.png"
-    fig_resid = config.RESULTS_FIGURES_DIR / f"sarimax_{pid}_residuals_distribution.png"
+    fig_actual = config.FIGURES_LINEAR_DIR / f"sarimax_{pid}_actual_vs_predicted.png"
+    fig_resid = config.FIGURES_LINEAR_DIR / f"sarimax_{pid}_residuals_distribution.png"
     if fig_actual.exists():
         display(Image(filename=str(fig_actual)))
     if fig_resid.exists():
@@ -325,8 +325,8 @@ display(metrics_df)
         nbf.v4.new_markdown_cell("## 3. Diagnostic Visualizations"),
         nbf.v4.new_code_cell("""for pid in problems:
     print(f"\\n{'='*70}\\nDIAGNOSTIC PLOTS FOR PROBLEM {pid}\\n{'='*70}")
-    fig_actual = config.RESULTS_FIGURES_DIR / f"prophet_{pid}_actual_vs_predicted.png"
-    fig_resid = config.RESULTS_FIGURES_DIR / f"prophet_{pid}_residuals_distribution.png"
+    fig_actual = config.FIGURES_LINEAR_DIR / f"prophet_{pid}_actual_vs_predicted.png"
+    fig_resid = config.FIGURES_LINEAR_DIR / f"prophet_{pid}_residuals_distribution.png"
     if fig_actual.exists():
         display(Image(filename=str(fig_actual)))
     if fig_resid.exists():
@@ -387,8 +387,8 @@ display(metrics_df)
         nbf.v4.new_markdown_cell("## 3. Diagnostic Visualizations"),
         nbf.v4.new_code_cell("""for pid in problems:
     print(f"\\n{'='*70}\\nDIAGNOSTIC PLOTS FOR PROBLEM {pid}\\n{'='*70}")
-    fig_actual = config.RESULTS_FIGURES_DIR / f"holt_winters_{pid}_actual_vs_predicted.png"
-    fig_resid = config.RESULTS_FIGURES_DIR / f"holt_winters_{pid}_residuals_distribution.png"
+    fig_actual = config.FIGURES_LINEAR_DIR / f"holt_winters_{pid}_actual_vs_predicted.png"
+    fig_resid = config.FIGURES_LINEAR_DIR / f"holt_winters_{pid}_residuals_distribution.png"
     if fig_actual.exists():
         display(Image(filename=str(fig_actual)))
     if fig_resid.exists():
@@ -478,7 +478,7 @@ for i, pid in enumerate(problems):
     axes[i].set_ylabel("")
 
 plt.tight_layout()
-fig_path = config.RESULTS_FIGURES_DIR / "m6a_rmse_comparison.png"
+fig_path = config.FIGURES_LINEAR_DIR / "m6a_rmse_comparison.png"
 plt.savefig(fig_path, dpi=200)
 plt.show()
 """),
@@ -495,7 +495,7 @@ for i, pid in enumerate(problems):
     axes[i].set_ylabel("")
 
 plt.tight_layout()
-fig_path = config.RESULTS_FIGURES_DIR / "m6a_skill_score_comparison.png"
+fig_path = config.FIGURES_LINEAR_DIR / "m6a_skill_score_comparison.png"
 plt.savefig(fig_path, dpi=200)
 plt.show()
 """),
@@ -517,7 +517,7 @@ if len(all_preds) > 1:
     sns.heatmap(corr, annot=True, fmt=".3f", cmap="Blues", cbar=True)
     plt.title("Prediction Correlation Across Models on D1 (Val 2025)", fontsize=13, fontweight="bold")
     plt.tight_layout()
-    plt.savefig(config.RESULTS_FIGURES_DIR / "m6a_model_error_correlation.png", dpi=200)
+    plt.savefig(config.FIGURES_LINEAR_DIR / "m6a_model_error_correlation.png", dpi=200)
     plt.show()
 """),
         nbf.v4.new_markdown_cell(r"""## 5. Architectural Findings & Recommended Models to Advance

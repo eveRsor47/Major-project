@@ -284,7 +284,7 @@ def plot_ml_diagnostics(
         ax2.legend()
     
     plt.tight_layout()
-    fig1_path = config.RESULTS_FIGURES_DIR / f"{model_name}_{problem_id}_actual_vs_predicted.png"
+    fig1_path = config.FIGURES_CLASSIC_ML_DIR / f"{model_name}_{problem_id}_actual_vs_predicted.png"
     plt.savefig(fig1_path, dpi=200)
     plt.close()
     saved_paths.append(fig1_path)
@@ -306,7 +306,7 @@ def plot_ml_diagnostics(
     ax4.legend()
     
     plt.tight_layout()
-    fig2_path = config.RESULTS_FIGURES_DIR / f"{model_name}_{problem_id}_residuals_distribution.png"
+    fig2_path = config.FIGURES_CLASSIC_ML_DIR / f"{model_name}_{problem_id}_residuals_distribution.png"
     plt.savefig(fig2_path, dpi=200)
     plt.close()
     saved_paths.append(fig2_path)
@@ -332,7 +332,7 @@ def plot_ml_diagnostics(
         plt.ylabel("Feature", fontsize=11)
         plt.tight_layout()
         
-        fig3_path = config.RESULTS_FIGURES_DIR / f"{model_name}_{problem_id}_feature_importance.png"
+        fig3_path = config.FIGURES_CLASSIC_ML_DIR / f"{model_name}_{problem_id}_feature_importance.png"
         plt.savefig(fig3_path, dpi=200)
         plt.close()
         saved_paths.append(fig3_path)

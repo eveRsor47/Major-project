@@ -217,9 +217,9 @@ Inspection of prediction tracking, residual distributions, and feature importanc
 
     cells.append(nbf.v4.new_code_cell(f"""for pid in problems:
     print(f"\\n{'='*70}\\nDIAGNOSTIC PLOTS FOR PROBLEM {{pid}}\\n{'='*70}")
-    fig_actual = config.RESULTS_FIGURES_DIR / f"{model_name}_{{pid}}_actual_vs_predicted.png"
-    fig_resid = config.RESULTS_FIGURES_DIR / f"{model_name}_{{pid}}_residuals_distribution.png"
-    fig_imp = config.RESULTS_FIGURES_DIR / f"{model_name}_{{pid}}_feature_importance.png"
+    fig_actual = config.FIGURES_CLASSIC_ML_DIR / f"{model_name}_{{pid}}_actual_vs_predicted.png"
+    fig_resid = config.FIGURES_CLASSIC_ML_DIR / f"{model_name}_{{pid}}_residuals_distribution.png"
+    fig_imp = config.FIGURES_CLASSIC_ML_DIR / f"{model_name}_{{pid}}_feature_importance.png"
     
     if fig_actual.exists():
         display(Image(filename=str(fig_actual)))
@@ -327,7 +327,7 @@ for i, pid in enumerate(problems):
     axes[i].set_ylabel("")
 
 plt.tight_layout()
-fig_path = config.RESULTS_FIGURES_DIR / "m6b_ml_rmse_comparison.png"
+fig_path = config.FIGURES_CLASSIC_ML_DIR / "m6b_ml_rmse_comparison.png"
 plt.savefig(fig_path, dpi=200)
 plt.show()
 """),
@@ -344,7 +344,7 @@ for i, pid in enumerate(problems):
     axes[i].set_ylabel("")
 
 plt.tight_layout()
-fig_path = config.RESULTS_FIGURES_DIR / "m6b_ml_skill_score_comparison.png"
+fig_path = config.FIGURES_CLASSIC_ML_DIR / "m6b_ml_skill_score_comparison.png"
 plt.savefig(fig_path, dpi=200)
 plt.show()
 """),
