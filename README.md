@@ -1,4 +1,4 @@
-﻿# Renewable Energy-Aware Load Prediction Model for Smart Grids
+# Renewable Energy-Aware Load Prediction Model for Smart Grids
 **Focus Case Study: Pavagada Solar Park (2,050 MW), Tumkur District, Karnataka**
 
 ---
@@ -46,15 +46,16 @@ MAJOR PROJECT/
 │   ├── raw/                 # Untouched original file (final_dataset.csv)
 │   ├── interim/             # Cleaned hourly dataset (clean_hourly.csv, .parquet)
 │   └── processed/           # Model-ready features, train/val/test splits & sequences
+├── models/
+│   ├── linear_statistical/  # M6a: Linear & Statistical Notebooks (Linear, Ridge, Lasso, etc. + summary)
+│   ├── classic_ml/          # M6b: Classic ML Notebooks (RandomForest, XGBoost, LightGBM, etc. + summary)
+│   └── deep_learning/       # M7: Deep Learning Notebooks (LSTM, GRU, CNN_LSTM, BiLSTM, DLinear + summary)
 ├── notebooks/
 │   ├── 00_data_audit.ipynb
 │   ├── 01_preprocessing.ipynb
 │   ├── 02_eda.ipynb
 │   ├── 03_features_and_splits.ipynb
 │   ├── 04_baselines.ipynb
-│   ├── 05a_linear_statistical.ipynb
-│   ├── 05b_classic_ml.ipynb
-│   ├── 06_dl_models.ipynb
 │   ├── 07_tuning_ensemble.ipynb
 │   ├── 08_net_load.ipynb
 │   └── 09_final_results.ipynb
@@ -66,7 +67,7 @@ MAJOR PROJECT/
 │   ├── metrics.py           # RMSE, MAE, nMAE, MAPE (demand), sMAPE, R2, skill, pinball
 │   ├── models_stat.py       # Linear, SARIMAX, Holt-Winters, Prophet
 │   ├── models_ml.py         # Sklearn, XGBoost, LightGBM, CatBoost
-│   ├── models_dl.py         # LSTM, GRU, CNN-LSTM sequence builders
+│   ├── models_dl.py         # PyTorch architectures: LSTM, GRU, CNN-LSTM, BiLSTM, DLinear
 │   ├── models_prob.py       # Quantile models, NGBoost, DeepAR
 │   ├── ensemble.py          # Averaging, stacking, hybrid, correlation pruning
 │   ├── audit.py             # Data verification and audit report engine
@@ -77,12 +78,15 @@ MAJOR PROJECT/
 │   ├── test_preprocess.py
 │   ├── test_eda.py
 │   ├── test_features.py
-│   └── test_split.py
+│   ├── test_baselines.py
+│   ├── test_models_stat.py
+│   ├── test_models_ml.py
+│   └── test_models_dl.py
 ├── results/
-│   ├── tables/              # Evaluation tables, audit logs, and summaries
-│   ├── figures/             # Diagnostic plots, error distributions, duck curve
+│   ├── tables/              # Evaluation tables, audit logs, and summaries (CSV / MD)
+│   ├── figures/             # Partitioned: eda/, baselines/, linear_statistical/, classic_ml/, deep_learning/
 │   ├── models/              # Saved model checkpoints and scalers (joblib / pt)
-│   └── predictions/         # Out-of-fold and test predictions
+│   └── predictions/         # Validation and test predictions (parquet)
 ├── requirements.txt
 └── README.md
 ```
@@ -91,7 +95,7 @@ MAJOR PROJECT/
 
 ## 4. Git Collaboration & Remote Setup
 
-To collaborate with a friend or pull the latest changes:
+To collaborate or pull the latest changes:
 ```powershell
 # Clone the repository:
 git clone https://github.com/eveRsor47/Major-project.git
@@ -118,12 +122,8 @@ uv pip install -r requirements.txt --python .venv\Scripts\python.exe
 | **Commit 4 (`dea2476` / `a4ee977`)** | **M3: EDA & Statistical Validation** | Built `src/eda.py`, generated 10 publication-grade diagnostic plots in `results/figures/`, computed Augmented Dickey-Fuller (ADF) stationarity metrics (`results/tables/stationarity_tests.csv`), ramp distributions (`results/tables/ramp_rate_statistics.csv`), compiled `results/tables/eda_findings.md`, created `notebooks/02_eda.ipynb`, compiled 7-page executive briefing PDF (`Pavagada_Solar_Forecasting_Team_Briefing_M0_M3.pdf`), and passed `tests/test_eda.py`. | **VERIFIED (30/30 Tests Pass)** |
 | **Commit 5 (`3f12079`)** | **Notebooks: Baked Cell Outputs** | Pre-rendered and embedded all execution streams, statistical tables, and high-res figures into `00_data_audit.ipynb`, `01_preprocessing.ipynb`, and `02_eda.ipynb` for instant standalone viewing. | **VERIFIED (30/30 Tests Pass)** |
 | **Commit 6 (`dc418de`)** | **M4: Features & Splits** | Engineered horizon-aware features in `src/features.py` for 4 problems (S1, S24, D1, D24), chronological train/val/quarantined test splits, train-fitted `StandardScaler` (`results/models/`), sliding window 3D sequence builder `(N, 24, F)`, empirical anti-leakage perturbation tests, generated and pre-rendered `notebooks/03_features_and_splits.ipynb`, exported 36 dataset parquets to `data/processed/`, and passed `tests/test_features.py`. | **VERIFIED (36/36 Tests Pass)** |
-| **Commit 7 (4ef86be)** | **M5: Baselines (6)** | Implemented Section 12 evaluation metrics in `src/metrics.py` (RMSE, MAE, nMAE by capacity, MAPE for demand, sMAPE, R2, skill vs persistence) and baseline generator in `src/evaluate.py`. Evaluated all 6 baselines (Persistence t-1, t-24, t-168, Clear-Sky, Smart Persistence, Mean of t-24 & t-168) across all 4 problems on 2025 validation set. Generated official `results/tables/baselines.csv` and `baselines.md`, saved predictions in `baseline_val_predictions.parquet`, created `fig11_baselines_comparison.png`, executed and baked `notebooks/04_baselines.ipynb`, and passed `tests/test_baselines.py`. | **VERIFIED (40/40 Tests Pass)** |
-| **Commit 8 (951542)** | **M6a: Linear & Statistical Models** | Implemented src/models_stat.py and dedicated subfolder models/linear_statistical/ containing 10 standalone executed notebooks (Linear.ipynb, Ridge.ipynb, Lasso.ipynb, ElasticNet.ipynb, Huber.ipynb, SARIMAX.ipynb, Prophet.ipynb, RANSAC.ipynb, HoltWinters.ipynb, and summary.ipynb). Evaluated across all 4 problems on 2025 validation set against M5 baselines. Generated 
-esults/tables/linear_stat_results.csv and .md, saved 36 model checkpoints to 
-esults/models/, validation predictions to 
-esults/predictions/, over 40 diagnostic plots to 
-esults/figures/, and passed 	ests/test_models_stat.py. | **VERIFIED (44/44 Tests Pass)** |
-| **Commit 9 (Current)** | **M6b: Classic Machine Learning Models** | Implemented src/models_ml.py and dedicated subfolder models/classic_ml/ containing 11 standalone executed notebooks (RandomForest.ipynb, XGBoost.ipynb, LightGBM.ipynb, CatBoost.ipynb, MLP.ipynb, ExtraTrees.ipynb, HistGradientBoosting.ipynb, GradientBoosting.ipynb, SVR.ipynb, KNN.ipynb, and summary.ipynb). Evaluated across all 4 problems on 2025 validation set. Achieved state-of-the-art results: MLP reached RMSE 219.61 MW (MAPE 1.38%, R2 0.9892) on D1 and 401.15 MW (MAPE 2.55%) on D24; LightGBM reached 40.62 MW on S1; GradientBoosting reached 48.62 MW on S24. Generated 
-esults/tables/classic_ml_results.csv, saved 40 model artifacts, validation predictions, and passed 48 unit tests. | **VERIFIED (48/48 Tests Pass)** |
-| *Upcoming* | **M7: Deep Learning Models** | Implement sequential and recurrent neural network architectures (models/deep_learning/: LSTM, Bi-LSTM, GRU, 1D-CNN, CNN-LSTM, TCN, N-BEATS, N-HiTS, etc.) using PyTorch. | *Pending Review* | Implement Tier 1 linear/statistical (Linear, Ridge, Lasso in M6a) and classic ML (Random Forest, XGBoost, LightGBM, CatBoost, MLP in M6b) models with `05a_linear_statistical.ipynb` and `05b_classic_ml.ipynb`. | *Pending Review* |
+| **Commit 7 (`4ef86be`)** | **M5: Baselines (6)** | Implemented Section 12 evaluation metrics in `src/metrics.py` (RMSE, MAE, nMAE by capacity, MAPE for demand, sMAPE, R2, skill vs persistence) and baseline generator in `src/evaluate.py`. Evaluated all 6 baselines (Persistence t-1, t-24, t-168, Clear-Sky, Smart Persistence, Mean of t-24 & t-168) across all 4 problems on 2025 validation set. Generated official `results/tables/baselines.csv` and `baselines.md`, saved predictions in `baseline_val_predictions.parquet`, created `fig11_baselines_comparison.png`, executed and baked `notebooks/04_baselines.ipynb`, and passed `tests/test_baselines.py`. | **VERIFIED (40/40 Tests Pass)** |
+| **Commit 8 (`f951542`)** | **M6a: Linear & Statistical Models** | Implemented `src/models_stat.py` and dedicated subfolder `models/linear_statistical/` containing 10 standalone executed notebooks (Linear.ipynb, Ridge.ipynb, Lasso.ipynb, ElasticNet.ipynb, Huber.ipynb, SARIMAX.ipynb, Prophet.ipynb, RANSAC.ipynb, HoltWinters.ipynb, and summary.ipynb). Evaluated across all 4 problems on 2025 validation set against M5 baselines. Generated `results/tables/linear_stat_results.csv` and `.md`, saved 36 model checkpoints to `results/models/`, validation predictions to `results/predictions/`, over 40 diagnostic plots to `results/figures/linear_statistical/`, and passed `tests/test_models_stat.py`. | **VERIFIED (44/44 Tests Pass)** |
+| **Commit 9 (`41d7af4` / `5504cf9`)** | **M6b: Classic Machine Learning Models** | Implemented `src/models_ml.py` and dedicated subfolder `models/classic_ml/` containing 11 standalone executed notebooks (RandomForest.ipynb, XGBoost.ipynb, LightGBM.ipynb, CatBoost.ipynb, MLP.ipynb, ExtraTrees.ipynb, HistGradientBoosting.ipynb, GradientBoosting.ipynb, SVR.ipynb, KNN.ipynb, and summary.ipynb). Evaluated across all 4 problems on 2025 validation set. Achieved state-of-the-art results: MLP reached RMSE 219.61 MW (MAPE 1.38%, R2 0.9892) on D1 and 401.15 MW (MAPE 2.55%) on D24; LightGBM reached 40.62 MW on S1; GradientBoosting reached 48.62 MW on S24. Generated `results/tables/classic_ml_results.csv` and `.md`, saved 40 model artifacts, validation predictions, over 40 diagnostic plots to `results/figures/classic_ml/`, and passed 48 unit tests. | **VERIFIED (48/48 Tests Pass)** |
+| **Commit 10 (Current - `db48a6f`)** | **M7: Deep Learning Models** | Implemented `src/models_dl.py` and dedicated subfolder `models/deep_learning/` containing 6 standalone executed notebooks (LSTM.ipynb, GRU.ipynb, CNN_LSTM.ipynb, BiLSTM.ipynb, DLinear.ipynb, and summary.ipynb). Evaluated across all 4 problems on 2025 validation set against M5 baselines, M6a linear models, and M6b classic ML. Achieved state-of-the-art results: DLinear achieved all-time project record RMSE 195.69 MW (MAPE 1.26%, Skill +70.79%) on D1; BiLSTM reached 48.40 MW on S1 (Skill +77.07%); GRU reached 53.15 MW on S24 (Skill +74.95%) and 396.20 MW on D24 (Skill +48.63%). Generated `results/tables/dl_results.csv` and `.md`, saved 20 PyTorch `.pt` model artifacts, 20 validation predictions, 43 diagnostic/ranking figures to `results/figures/deep_learning/`, and passed 53 unit tests. | **VERIFIED (53/53 Tests Pass)** |
+| *Upcoming* | **M8: Advanced Architectures & Tuning** | Advanced deep learning (PatchTST, N-BEATS, TFT, TimesNet) and Optuna hyperparameter optimization across best-performing models. | *Pending Review* |
