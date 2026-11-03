@@ -1,0 +1,5 @@
+model,problem,target,horizon,rmse,mae,nmae_pct,mape_pct,smape_pct,r2,mbe,skill_vs_persistence,daylight_rmse,daylight_mae,daylight_nmae_pct
+ridge,S1,solar_power_mw,1h,38.97,10.76,0.52,,7.64,0.9954,3.85,81.54,54.91,21.36,1.04
+ridge,S24,solar_power_mw,24h,48.72,12.87,0.63,,7.73,0.9929,6.27,77.04,68.64,25.55,1.25
+ridge,D1,demand_mw,1h,242.66,187.31,1.49,1.53,1.53,0.9868,-26.03,63.78,,,
+ridge,D24,demand_mw,24h,458.83,353.44,2.81,2.84,2.86,0.9527,-88.39,40.51,,,

@@ -1,0 +1,5 @@
+model,problem,target,horizon,rmse,mae,nmae_pct,mape_pct,smape_pct,r2,mbe,skill_vs_persistence,daylight_rmse,daylight_mae,daylight_nmae_pct
+huber,S1,solar_power_mw,1h,40.19,11.44,0.56,,6.76,0.9952,5.56,80.96,56.62,22.71,1.11
+huber,S24,solar_power_mw,24h,50.44,14.1,0.69,,4.68,0.9924,8.31,76.23,71.07,28.0,1.37
+huber,D1,demand_mw,1h,242.27,185.85,1.48,1.52,1.52,0.9868,-23.73,63.84,,,
+huber,D24,demand_mw,24h,457.43,350.99,2.79,2.83,2.83,0.953,-63.49,40.69,,,

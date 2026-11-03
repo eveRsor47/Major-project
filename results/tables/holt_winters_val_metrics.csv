@@ -1,0 +1,5 @@
+model,problem,target,horizon,rmse,mae,nmae_pct,mape_pct,smape_pct,r2,mbe,skill_vs_persistence,daylight_rmse,daylight_mae,daylight_nmae_pct
+holt_winters,D1,demand_mw,1h,11338.86,9394.59,74.6,80.02,50.87,-27.8771,9376.77,-1592.47,,,
+holt_winters,D24,demand_mw,24h,11338.86,9394.59,74.6,80.02,50.87,-27.8771,9376.77,-1370.1,,,
+holt_winters,S1,solar_power_mw,1h,375.23,208.81,10.19,,103.14,0.5781,-189.49,-77.78,528.66,414.5,20.22
+holt_winters,S24,solar_power_mw,24h,375.23,208.81,10.19,,103.14,0.5781,-189.49,-76.82,528.66,414.5,20.22

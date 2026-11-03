@@ -1,0 +1,5 @@
+model,problem,target,horizon,rmse,mae,nmae_pct,mape_pct,smape_pct,r2,mbe,skill_vs_persistence,daylight_rmse,daylight_mae,daylight_nmae_pct
+elasticnet,S1,solar_power_mw,1h,71.77,35.33,1.72,,18.34,0.9846,6.27,65.99,101.12,70.13,3.42
+elasticnet,S24,solar_power_mw,24h,76.04,37.32,1.82,,18.87,0.9827,7.52,64.17,107.13,74.08,3.61
+elasticnet,D1,demand_mw,1h,422.86,333.79,2.65,2.65,2.66,0.9598,-122.0,36.88,,,
+elasticnet,D24,demand_mw,24h,595.31,462.84,3.68,3.61,3.66,0.9204,-246.94,22.82,,,

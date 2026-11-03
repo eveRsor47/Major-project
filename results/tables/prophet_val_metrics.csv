@@ -1,0 +1,5 @@
+model,problem,target,horizon,rmse,mae,nmae_pct,mape_pct,smape_pct,r2,mbe,skill_vs_persistence,daylight_rmse,daylight_mae,daylight_nmae_pct
+prophet,D1,demand_mw,1h,1310.98,1208.9,9.6,9.68,10.26,0.614,-1195.37,-95.68,,,
+prophet,D24,demand_mw,24h,1310.98,1208.9,9.6,9.68,10.26,0.614,-1195.37,-69.97,,,
+prophet,S1,solar_power_mw,1h,50.91,18.36,0.9,,14.28,0.9922,-5.62,75.88,71.73,36.44,1.78
+prophet,S24,solar_power_mw,24h,50.91,18.36,0.9,,14.28,0.9922,-5.62,76.01,71.73,36.44,1.78
