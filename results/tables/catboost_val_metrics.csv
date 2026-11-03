@@ -1,0 +1,5 @@
+model,problem,target,horizon,rmse,mae,nmae_pct,mape_pct,smape_pct,r2,mbe,skill_vs_persistence,daylight_rmse,daylight_mae,daylight_nmae_pct
+catboost,S1,solar_power_mw,1h,41.83,13.77,0.67,,8.61,0.9948,6.09,80.18,58.94,27.33,1.33
+catboost,S24,solar_power_mw,24h,49.5,14.07,0.69,,8.08,0.9927,6.96,76.67,69.74,27.92,1.36
+catboost,D1,demand_mw,1h,253.28,181.89,1.44,1.44,1.44,0.9856,-59.4,62.2,,,
+catboost,D24,demand_mw,24h,445.43,347.27,2.76,2.74,2.77,0.9554,-172.04,42.25,,,

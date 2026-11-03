@@ -1,0 +1,5 @@
+model,problem,target,horizon,rmse,mae,nmae_pct,mape_pct,smape_pct,r2,mbe,skill_vs_persistence,daylight_rmse,daylight_mae,daylight_nmae_pct
+hist_gradient_boosting,S1,solar_power_mw,1h,41.47,12.07,0.59,,4.91,0.9948,5.92,80.35,58.43,23.97,1.17
+hist_gradient_boosting,S24,solar_power_mw,24h,48.86,12.55,0.61,,4.95,0.9928,6.68,76.98,68.84,24.92,1.22
+hist_gradient_boosting,D1,demand_mw,1h,237.11,168.53,1.34,1.33,1.34,0.9874,-43.75,64.61,,,
+hist_gradient_boosting,D24,demand_mw,24h,448.47,348.48,2.77,2.75,2.78,0.9548,-162.24,41.86,,,

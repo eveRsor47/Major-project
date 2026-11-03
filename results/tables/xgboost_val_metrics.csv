@@ -1,0 +1,5 @@
+model,problem,target,horizon,rmse,mae,nmae_pct,mape_pct,smape_pct,r2,mbe,skill_vs_persistence,daylight_rmse,daylight_mae,daylight_nmae_pct
+xgboost,S1,solar_power_mw,1h,42.94,12.05,0.59,,3.67,0.9945,6.1,79.65,60.5,23.91,1.17
+xgboost,S24,solar_power_mw,24h,49.06,12.68,0.62,,4.12,0.9928,6.65,76.88,69.12,25.17,1.23
+xgboost,D1,demand_mw,1h,236.13,168.63,1.34,1.33,1.34,0.9875,-49.88,64.76,,,
+xgboost,D24,demand_mw,24h,449.27,350.88,2.79,2.77,2.8,0.9547,-172.35,41.75,,,

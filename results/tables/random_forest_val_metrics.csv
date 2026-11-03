@@ -1,0 +1,5 @@
+model,problem,target,horizon,rmse,mae,nmae_pct,mape_pct,smape_pct,r2,mbe,skill_vs_persistence,daylight_rmse,daylight_mae,daylight_nmae_pct
+random_forest,S1,solar_power_mw,1h,44.49,12.47,0.61,,2.98,0.9941,6.5,78.92,62.69,24.75,1.21
+random_forest,S24,solar_power_mw,24h,49.1,12.7,0.62,,3.02,0.9928,6.55,76.86,69.18,25.22,1.23
+random_forest,D1,demand_mw,1h,256.52,184.25,1.46,1.47,1.48,0.9852,-51.82,61.71,,,
+random_forest,D24,demand_mw,24h,494.87,378.56,3.01,2.98,3.01,0.945,-140.49,35.84,,,
