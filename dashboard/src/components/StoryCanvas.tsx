@@ -156,15 +156,15 @@ export function StoryCanvas({ scene }: StoryCanvasProps) {
           }
         }
 
-        // CAD Laser Scan Sweep in Scene 2
+        // Subtle CAD Laser Scan Sweep in Scene 2
         if (s === 2) {
-          const scanX = ((t * 190) % (width + 200)) - 100;
-          const grad = ctx.createLinearGradient(scanX - 90, 0, scanX + 20, 0);
+          const scanX = ((t * 170) % (width + 220)) - 110;
+          const grad = ctx.createLinearGradient(scanX - 90, 0, scanX + 16, 0);
           grad.addColorStop(0, "rgba(92, 184, 228, 0)");
-          grad.addColorStop(0.85, "rgba(92, 184, 228, 0.14)");
-          grad.addColorStop(1, "rgba(142, 216, 248, 0.35)");
+          grad.addColorStop(0.86, "rgba(92, 184, 228, 0.06)");
+          grad.addColorStop(1, "rgba(142, 216, 248, 0.14)");
           ctx.fillStyle = grad;
-          ctx.fillRect(scanX - 90, 0, 110, height);
+          ctx.fillRect(scanX - 90, 0, 106, height);
         }
       }
 
@@ -175,13 +175,15 @@ export function StoryCanvas({ scene }: StoryCanvasProps) {
         pt.py = pt.y;
 
         if (s === 4) {
-          // Scene 5 Gravitational Yin-Yang Vortex orbiting luminously around center emblem
+          // Scene 5 Gravitational Yin-Yang Vortex framed around the centered d <-> p emblem
           const armOffset = pt.polarity === "gold" ? 0 : Math.PI;
-          const targetBand = 112 + (i % 8) * 16;
-          pt.angle += 0.028 + (160 / Math.max(85, pt.radius)) * 0.012;
-          pt.radius = pt.radius + (targetBand - pt.radius) * 0.045;
+          const minBand = Math.max(96, Math.min(width, height) * 0.125);
+          const targetBand = minBand + (i % 7) * 14;
+          const emblemY = height >= 880 ? height * 0.415 : height * 0.405;
+          pt.angle += 0.02 + (150 / Math.max(100, pt.radius)) * 0.009;
+          pt.radius = pt.radius + (targetBand - pt.radius) * 0.05;
           const targetX = cx + Math.cos(pt.angle + armOffset) * pt.radius;
-          const targetY = cy - 42 + Math.sin(pt.angle + armOffset) * pt.radius * 0.82;
+          const targetY = emblemY + Math.sin(pt.angle + armOffset) * pt.radius * 0.78;
           pt.x += (targetX - pt.x) * 0.16;
           pt.y += (targetY - pt.y) * 0.16;
         } else if (s === 1) {

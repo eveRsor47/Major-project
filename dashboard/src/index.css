@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant tall (@media (min-height: 880px) and (min-width: 1200px));
 
 @layer base {
   :root {
