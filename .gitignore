@@ -15,4 +15,7 @@ dashboard/dist/
 Thumbs.db
 catboost_info/
 *.pptx
+.vercel/
+dashboard/.vercel/
+.env*.local
 
