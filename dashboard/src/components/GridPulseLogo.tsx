@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 interface GridPulseLogoProps {
   mode?: "reveal" | "header" | "mark";
   className?: string;
+  themeAware?: boolean;
 }
 
 /**
@@ -10,7 +11,11 @@ interface GridPulseLogoProps {
  * Interlocked Burnished Gold `d` (stem up) and Glacier Azure `p` (stem down)
  * executing a weighted 180-degree Yin-Yang Swing before crystallizing into wordmark.
  */
-export function GridPulseLogo({ mode = "header", className = "" }: GridPulseLogoProps) {
+export function GridPulseLogo({
+  mode = "header",
+  className = "",
+  themeAware = true,
+}: GridPulseLogoProps) {
   const isReveal = mode === "reveal";
   const isMark = mode === "mark";
   const sizeClass = isReveal
@@ -150,14 +155,18 @@ export function GridPulseLogo({ mode = "header", className = "" }: GridPulseLogo
   return (
     <div className={`inline-flex items-center gap-2.5 select-none ${className}`}>
       {MarkSvg}
-      <div className="leading-none">
+      <div className="leading-none text-left">
         <div className="font-display text-[17px] font-bold">
-          <span className="text-[#F5F7FA]">Gri</span>
-          <span className="text-[#E5A93C]">d</span>
-          <span className="text-[#5CB8E4]">P</span>
-          <span className="text-[#F5F7FA]">ulse</span>
+          <span className={themeAware ? "text-[#F5F7FA] light:text-slate-900" : "text-[#F5F7FA]"}>Gri</span>
+          <span className={themeAware ? "text-[#E5A93C] light:text-amber-600" : "text-[#E5A93C]"}>d</span>
+          <span className={themeAware ? "text-[#5CB8E4] light:text-sky-600" : "text-[#5CB8E4]"}>P</span>
+          <span className={themeAware ? "text-[#F5F7FA] light:text-slate-900" : "text-[#F5F7FA]"}>ulse</span>
         </div>
-        <div className="text-[10px] font-mono-num tracking-[0.16em] uppercase text-slate-400 mt-0.5">
+        <div
+          className={`text-[10px] font-mono-num tracking-[0.16em] uppercase mt-0.5 ${
+            themeAware ? "text-slate-400 light:text-slate-500" : "text-slate-400"
+          }`}
+        >
           KSLDC · 2,050 MW
         </div>
       </div>

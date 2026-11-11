@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { CheckCircle2, Lock, MessageSquareQuote, Search, ShieldCheck } from "lucide-react";
 import { useGridStore } from "../store/useGridStore";
 import { EChartBox } from "../components/EChartBox";
+import { getChartPalette } from "../utils/chartTheme";
 import type { ProblemId } from "../types";
 
 const VIVA_QA = [
@@ -13,12 +14,12 @@ const VIVA_QA = [
   {
     q: "Why was the M9 Physical Solar Ramp Gate calibrated to 1,000 MW/hr instead of 410 MW/hr?",
     a: "Empirical physics! Analysis of 43,824 true hourly readings across Pavagada's 2,050 MW park confirmed natural sunrise/sunset irradiance ramps regularly hit ~482 MW/hr and fast monsoon breaks reach 942 MW/hr. Hard-clamping to 410 MW/hr clipped real dawn curves and hurt RMSE; 1,000 MW/hr (48.8% of nameplate capacity) blocks impossible single-hour hallucinations while preserving physical transients.",
-    proof: "Verified in src/postprocessing.py & tests/test_postprocessing.py",
+    proof: "Verified in src/postprocess.py & tests/test_postprocess.py",
   },
   {
     q: "Prove there is zero data leakage between 2021–24 Train, 2025 Val, and 2026 Test.",
     a: "StandardScalers, lag generators, 20 Optuna Huber studies, NNLS weights, Stacking Ridge meta-learners, and Quantile LightGBM bands are strictly fit inside Train (2021–2024) or Val (2025). The Jan–Feb 2026 Test split was mathematically quarantined until final Milestone M10 freeze, verified automatically across the full pytest suite (97/97 passing).",
-    proof: "Enforced by tests/test_data_splits.py & tests/test_m11_dashboard.py",
+    proof: "Enforced by tests/test_features.py, tests/test_m10.py & tests/test_m11_dashboard.py",
   },
   {
     q: "Why report NMAE (%) and Daylight RMSE for Solar rather than standard MAPE (%)?",
@@ -28,11 +29,12 @@ const VIVA_QA = [
 ];
 
 export function VivaWarRoom() {
-  const { benchmarks, manifest, completeQuest } = useGridStore();
+  const { benchmarks, manifest, completeQuest, theme } = useGridStore();
   const [selectedQaIdx, setSelectedQaIdx] = useState(0);
   const [filterProblem, setFilterProblem] = useState<"ALL" | ProblemId>("ALL");
   const [filterTier, setFilterTier] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState("");
+  const pal = useMemo(() => getChartPalette(theme), [theme]);
 
   const genOption = useMemo(() => {
     const gen = benchmarks?.val_vs_test_generalization ?? [];
@@ -40,39 +42,41 @@ export function VivaWarRoom() {
       backgroundColor: "transparent",
       tooltip: {
         trigger: "axis",
-        backgroundColor: "rgba(8,13,25,0.95)",
-        textStyle: { color: "#E2E8F0", fontSize: 11, fontFamily: "JetBrains Mono" },
+        backgroundColor: pal.tooltipBg,
+        borderColor: pal.tooltipBorder,
+        textStyle: { color: pal.tooltipText, fontSize: 11, fontFamily: "JetBrains Mono" },
       },
-      legend: { top: 0, textStyle: { color: "#94A3B8", fontSize: 11 } },
+      legend: { top: 0, textStyle: { color: pal.legendText, fontSize: 11 } },
       grid: { top: 34, left: 52, right: 16, bottom: 26 },
       xAxis: {
         type: "category",
         data: gen.map((g) => g.problem),
-        axisLabel: { color: "#CBD5E1", fontSize: 11, fontFamily: "JetBrains Mono" },
+        axisLine: { lineStyle: { color: pal.axisLine } },
+        axisLabel: { color: pal.axisLabelStrong, fontSize: 11, fontFamily: "JetBrains Mono" },
       },
       yAxis: {
         type: "value",
         name: "RMSE (MW)",
-        nameTextStyle: { color: "#64748B", fontSize: 10 },
-        splitLine: { lineStyle: { color: "rgba(148,163,184,0.08)" } },
-        axisLabel: { color: "#94A3B8", fontSize: 10, fontFamily: "JetBrains Mono" },
+        nameTextStyle: { color: pal.axisTitle, fontSize: 10 },
+        splitLine: { lineStyle: { color: pal.splitLine } },
+        axisLabel: { color: pal.axisLabel, fontSize: 10, fontFamily: "JetBrains Mono" },
       },
       series: [
         {
           name: "Val 2025 RMSE",
           type: "bar",
           data: gen.map((g) => Number(g.val_2025_rmse.toFixed(2))),
-          itemStyle: { color: "#E5A93C", borderRadius: [4, 4, 0, 0] },
+          itemStyle: { color: pal.solar, borderRadius: [4, 4, 0, 0] },
         },
         {
           name: "Test 2026 RMSE",
           type: "bar",
           data: gen.map((g) => Number(g.test_2026_rmse.toFixed(2))),
-          itemStyle: { color: "#5CB8E4", borderRadius: [4, 4, 0, 0] },
+          itemStyle: { color: pal.grid, borderRadius: [4, 4, 0, 0] },
         },
       ],
     };
-  }, [benchmarks]);
+  }, [benchmarks, pal]);
 
   const rows = useMemo(() => {
     const all = benchmarks?.m10_test_benchmark ?? [];
@@ -92,67 +96,67 @@ export function VivaWarRoom() {
 
   return (
     <div className="space-y-4">
-      {/* 1. ZERO-LEAKAGE CERTIFICATE & GENERALIZATION CHART */}
       <section data-tour-id="vw-seal" className="grid grid-cols-1 xl:grid-cols-12 gap-4">
-        <div className="xl:col-span-6 cad-panel rounded-2xl p-5 border-[#34D399]/35 flex flex-col justify-between">
+        <div className="xl:col-span-6 cad-panel rounded-2xl p-5 border-[#34D399]/35 light:border-emerald-600/35 flex flex-col justify-between">
           <div>
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-[#34D399]/40 bg-[#34D399]/10 px-3 py-1 text-xs font-mono-num text-[#6EE7B7]">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-[#34D399]/40 light:border-emerald-600/40 bg-[#34D399]/10 light:bg-emerald-500/12 px-3 py-1 text-xs font-mono-num text-[#6EE7B7] light:text-emerald-700">
               <ShieldCheck className="w-4 h-4" /> CRYPTOGRAPHIC CHRONOLOGICAL AUDIT SEAL
             </div>
-            <h1 className="mt-3 font-display text-lg sm:text-xl font-bold text-white">
+            <h1 className="mt-3 font-display text-lg sm:text-xl font-bold text-white light:text-slate-900">
               Zero-Leakage Unblinded Evaluation Protocol
             </h1>
-            <p className="mt-1 text-xs text-slate-300 leading-relaxed">
+            <p className="mt-1 text-xs text-slate-300 light:text-slate-600 leading-relaxed">
               Every feature scaler, Optuna study, Stacking meta-learner, and M9 safety rule was frozen before evaluating Jan–Feb 2026.
             </p>
           </div>
 
           <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs font-mono-num">
-            <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-3">
-              <div className="text-[10px] text-slate-400">TRAIN SPLIT</div>
-              <div className="font-bold text-white mt-0.5">2021-03 → 2024-12</div>
-              <div className="text-[10px] text-slate-400">33,480 Hours</div>
+            <div className="rounded-xl border border-white/[0.08] light:border-slate-900/10 bg-white/[0.03] light:bg-slate-900/[0.04] p-3">
+              <div className="text-[10px] text-slate-400 light:text-slate-500">TRAIN SPLIT</div>
+              <div className="font-bold text-white light:text-slate-900 mt-0.5">2021-03 → 2024-12</div>
+              <div className="text-[10px] text-slate-400 light:text-slate-600">33,480 Hours</div>
             </div>
-            <div className="rounded-xl border border-[#E5A93C]/35 bg-[#E5A93C]/[0.06] p-3">
-              <div className="text-[10px] text-[#F3C669]">VALIDATION SPLIT</div>
-              <div className="font-bold text-white mt-0.5">2025-01 → 2025-12</div>
-              <div className="text-[10px] text-slate-400">8,737 Seq Hours</div>
+            <div className="rounded-xl border border-[#E5A93C]/35 light:border-amber-600/35 bg-[#E5A93C]/[0.06] light:bg-amber-500/[0.08] p-3">
+              <div className="text-[10px] text-[#F3C669] light:text-amber-700">VALIDATION SPLIT</div>
+              <div className="font-bold text-white light:text-slate-900 mt-0.5">2025-01 → 2025-12</div>
+              <div className="text-[10px] text-slate-400 light:text-slate-600">8,737 Seq Hours</div>
             </div>
-            <div className="rounded-xl border border-[#5CB8E4]/35 bg-[#5CB8E4]/[0.07] p-3">
-              <div className="text-[10px] text-[#8ED8F8] flex items-center gap-1">
+            <div className="rounded-xl border border-[#5CB8E4]/35 light:border-sky-600/35 bg-[#5CB8E4]/[0.07] light:bg-sky-500/[0.08] p-3">
+              <div className="text-[10px] text-[#8ED8F8] light:text-sky-700 flex items-center gap-1">
                 <Lock className="w-3 h-3" /> QUARANTINED TEST
               </div>
-              <div className="font-bold text-white mt-0.5">2026-01 → 2026-02</div>
-              <div className="text-[10px] text-slate-400">1,393 Seq Hours</div>
+              <div className="font-bold text-white light:text-slate-900 mt-0.5">2026-01 → 2026-02</div>
+              <div className="text-[10px] text-slate-400 light:text-slate-600">1,393 Seq Hours</div>
             </div>
           </div>
 
-          <div className="mt-3 flex flex-wrap items-center justify-between text-xs font-mono-num pt-2 border-t border-white/[0.08]">
-            <span className="text-[#6EE7B7] flex items-center gap-1.5">
+          <div className="mt-3 flex flex-wrap items-center justify-between text-xs font-mono-num pt-2 border-t border-white/[0.08] light:border-slate-900/10">
+            <span className="text-[#6EE7B7] light:text-emerald-700 flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4" />
               {manifest?.verification.pytest_passed ?? 97}/{manifest?.verification.pytest_total ?? 97} Automated Pytest Verified
             </span>
-            <span className="text-slate-400">{manifest?.verification.optuna_studies ?? 20} Optuna Studies</span>
+            <span className="text-slate-400 light:text-slate-600">{manifest?.verification.optuna_studies ?? 20} Optuna Studies</span>
           </div>
         </div>
 
         <div className="xl:col-span-6 cad-panel rounded-2xl p-4">
           <div className="flex items-center justify-between mb-2">
             <div>
-              <h2 className="font-display text-sm font-bold text-white">
+              <h2 className="font-display text-sm font-bold text-white light:text-slate-900">
                 Validation 2025 vs Unblinded Test 2026 Generalization
               </h2>
-              <p className="text-[11px] text-slate-400">Champion Stacking Ridge + M9 consistency across unseen winter 2026</p>
+              <p className="text-[11px] text-slate-400 light:text-slate-600">
+                Champion Stacking Ridge + M9 consistency across unseen winter 2026
+              </p>
             </div>
           </div>
           <EChartBox option={genOption} height={225} />
         </div>
       </section>
 
-      {/* 2. ORAL DEFENSE SIMULATOR */}
       <section data-tour-id="vw-qa" className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         <div className="lg:col-span-5 cad-panel rounded-2xl p-4 space-y-2">
-          <div className="text-xs font-mono-num uppercase tracking-wider text-[#8ED8F8] flex items-center gap-1.5 mb-2">
+          <div className="text-xs font-mono-num uppercase tracking-wider text-[#8ED8F8] light:text-sky-700 flex items-center gap-1.5 mb-2">
             <MessageSquareQuote className="w-4 h-4" /> Examiner Oral Defense Topics
           </div>
           {VIVA_QA.map((item, idx) => (
@@ -161,8 +165,8 @@ export function VivaWarRoom() {
               onClick={() => setSelectedQaIdx(idx)}
               className={`w-full text-left rounded-xl border p-3 text-xs transition cursor-pointer ${
                 idx === selectedQaIdx
-                  ? "border-[#5CB8E4]/60 bg-[#5CB8E4]/12 text-white font-semibold"
-                  : "border-white/[0.08] bg-white/[0.025] text-slate-300 hover:border-white/25"
+                  ? "border-[#5CB8E4]/60 light:border-sky-600 bg-[#5CB8E4]/12 light:bg-sky-500/12 text-white light:text-slate-900 font-semibold"
+                  : "border-white/[0.08] light:border-slate-900/10 bg-white/[0.025] light:bg-white/70 text-slate-300 light:text-slate-700 hover:border-white/25"
               }`}
             >
               {item.q}
@@ -172,24 +176,25 @@ export function VivaWarRoom() {
 
         <div className="lg:col-span-7 cad-panel rounded-2xl p-5 flex flex-col justify-between">
           <div>
-            <div className="text-[11px] font-mono-num text-[#F3C669] mb-1">VERIFIED EMPIRICAL RESPONSE</div>
-            <h3 className="font-display text-base sm:text-lg font-bold text-white">{qa.q}</h3>
-            <p className="mt-3 text-sm leading-relaxed text-slate-200">{qa.a}</p>
+            <div className="text-[11px] font-mono-num text-[#F3C669] light:text-amber-700 mb-1">
+              VERIFIED EMPIRICAL RESPONSE
+            </div>
+            <h3 className="font-display text-base sm:text-lg font-bold text-white light:text-slate-900">{qa.q}</h3>
+            <p className="mt-3 text-sm leading-relaxed text-slate-200 light:text-slate-700">{qa.a}</p>
           </div>
-          <div className="mt-4 rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-xs font-mono-num text-[#8ED8F8]">
+          <div className="mt-4 rounded-lg border border-white/[0.08] light:border-slate-900/10 bg-white/[0.03] light:bg-slate-900/[0.04] px-3 py-2 text-xs font-mono-num text-[#8ED8F8] light:text-sky-700">
             {qa.proof}
           </div>
         </div>
       </section>
 
-      {/* 3. COMPLETE 148-MODEL TEST LEADERBOARD */}
       <section data-tour-id="vw-leaderboard" className="cad-panel rounded-2xl p-4 space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="font-display text-sm sm:text-base font-bold text-white">
+            <h2 className="font-display text-sm sm:text-base font-bold text-white light:text-slate-900">
               Complete 148-Model Test 2026 Leaderboard
             </h2>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-400 light:text-slate-600">
               Showing {rows.length} of {benchmarks?.m10_test_benchmark.length ?? 148} verified model evaluations
             </p>
           </div>
@@ -205,7 +210,7 @@ export function VivaWarRoom() {
                   completeQuest("auditedLeaderboard");
                 }}
                 placeholder="Search model..."
-                className="rounded-lg border border-white/10 bg-[#0D1017] pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder:text-slate-500"
+                className="rounded-lg border border-white/10 light:border-slate-300 bg-[#0D1017] light:bg-white pl-8 pr-3 py-1.5 text-xs text-slate-200 light:text-slate-800 placeholder:text-slate-500"
               />
             </div>
 
@@ -215,7 +220,7 @@ export function VivaWarRoom() {
                 setFilterProblem(e.target.value as "ALL" | ProblemId);
                 completeQuest("auditedLeaderboard");
               }}
-              className="rounded-lg border border-white/10 bg-[#0D1017] px-2.5 py-1.5 font-mono-num text-slate-200"
+              className="rounded-lg border border-white/10 light:border-slate-300 bg-[#0D1017] light:bg-white px-2.5 py-1.5 font-mono-num text-slate-200 light:text-slate-800"
             >
               <option value="ALL">All Problems</option>
               <option value="S1">S1 (Solar 1h)</option>
@@ -230,7 +235,7 @@ export function VivaWarRoom() {
                 setFilterTier(e.target.value);
                 completeQuest("auditedLeaderboard");
               }}
-              className="rounded-lg border border-white/10 bg-[#0D1017] px-2.5 py-1.5 font-mono-num text-slate-200"
+              className="rounded-lg border border-white/10 light:border-slate-300 bg-[#0D1017] light:bg-white px-2.5 py-1.5 font-mono-num text-slate-200 light:text-slate-800"
             >
               {tiers.map((t) => (
                 <option key={t} value={t}>
@@ -241,9 +246,9 @@ export function VivaWarRoom() {
           </div>
         </div>
 
-        <div className="overflow-x-auto max-h-96 overflow-y-auto rounded-xl border border-white/[0.08]">
+        <div className="overflow-x-auto max-h-96 overflow-y-auto rounded-xl border border-white/[0.08] light:border-slate-900/10">
           <table className="w-full text-left text-xs font-mono-num">
-            <thead className="sticky top-0 bg-[#090B10] text-slate-400 border-b border-white/[0.08]">
+            <thead className="sticky top-0 bg-[#090B10] light:bg-slate-100 text-slate-400 light:text-slate-600 border-b border-white/[0.08] light:border-slate-200">
               <tr>
                 <th className="py-2.5 px-3">Prob</th>
                 <th className="py-2.5 px-3">Model</th>
@@ -254,22 +259,26 @@ export function VivaWarRoom() {
                 <th className="py-2.5 px-3 text-right">Skill (%)</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/[0.06]">
+            <tbody className="divide-y divide-white/[0.06] light:divide-slate-200">
               {rows.map((r) => {
                 const isChamp = r.tier === "Final";
                 return (
                   <tr
                     key={`${r.problem}-${r.model}-${r.tier}`}
-                    className={isChamp ? "bg-[#34D399]/10 text-[#A7F3D0]" : "hover:bg-white/[0.03] text-slate-200"}
+                    className={
+                      isChamp
+                        ? "bg-[#34D399]/10 light:bg-emerald-500/12 text-[#A7F3D0] light:text-emerald-900"
+                        : "hover:bg-white/[0.03] light:hover:bg-slate-900/[0.04] text-slate-200 light:text-slate-800"
+                    }
                   >
-                    <td className="py-2 px-3 font-bold text-[#8ED8F8]">{r.problem}</td>
+                    <td className="py-2 px-3 font-bold text-[#8ED8F8] light:text-sky-700">{r.problem}</td>
                     <td className="py-2 px-3">{r.model}</td>
                     <td className="py-2 px-3">
                       <span
                         className={`rounded px-1.5 py-0.5 text-[10px] ${
                           isChamp
-                            ? "bg-[#34D399]/20 text-[#6EE7B7] font-bold"
-                            : "bg-white/[0.07] text-slate-300"
+                            ? "bg-[#34D399]/20 light:bg-emerald-600/15 text-[#6EE7B7] light:text-emerald-800 font-bold"
+                            : "bg-white/[0.07] light:bg-slate-200 text-slate-300 light:text-slate-700"
                         }`}
                       >
                         {r.tier}
@@ -278,7 +287,13 @@ export function VivaWarRoom() {
                     <td className="py-2 px-3 text-right font-bold">{r.rmse.toFixed(2)}</td>
                     <td className="py-2 px-3 text-right">{r.mae.toFixed(2)}</td>
                     <td className="py-2 px-3 text-right">{r.r2.toFixed(4)}</td>
-                    <td className={`py-2 px-3 text-right ${r.skill_vs_persistence >= 0 ? "text-[#6EE7B7]" : "text-[#FCA5A5]"}`}>
+                    <td
+                      className={`py-2 px-3 text-right ${
+                        r.skill_vs_persistence >= 0
+                          ? "text-[#6EE7B7] light:text-emerald-700"
+                          : "text-[#FCA5A5] light:text-red-700"
+                      }`}
+                    >
                       {r.skill_vs_persistence >= 0 ? "+" : ""}
                       {r.skill_vs_persistence.toFixed(2)}%
                     </td>
@@ -292,4 +307,3 @@ export function VivaWarRoom() {
     </div>
   );
 }
-

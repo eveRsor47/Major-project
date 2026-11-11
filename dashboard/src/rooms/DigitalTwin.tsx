@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Building2, Pause, Play, Sun, Zap } from "lucide-react";
 import { useGridStore } from "../store/useGridStore";
 import { EChartBox } from "../components/EChartBox";
+import { getChartPalette } from "../utils/chartTheme";
 
 const PARK_SECTORS = [
   { key: "section_1", code: "BLK-01", operator: "NTPC Solar I", capMw: 256.25 },
@@ -15,9 +16,19 @@ const PARK_SECTORS = [
 ];
 
 export function DigitalTwin() {
-  const { activeSplit, testData, valData, cursorIndex, setCursorIndex, isPlaying, setIsPlaying } = useGridStore();
+  const { activeSplit, testData, valData, cursorIndex, setCursorIndex, isPlaying, setIsPlaying, theme } =
+    useGridStore();
   const ds = activeSplit === "val_2025" && valData ? valData : testData;
   const [selectedIdx, setSelectedIdx] = useState(0);
+  const pal = useMemo(() => getChartPalette(theme), [theme]);
+
+  useEffect(() => {
+    if (!isPlaying || !ds) return;
+    const t = setInterval(() => {
+      setCursorIndex((cursorIndex + 1) % ds.count);
+    }, 320);
+    return () => clearInterval(t);
+  }, [isPlaying, cursorIndex, ds, setCursorIndex]);
 
   const idx = ds ? Math.min(cursorIndex, ds.count - 1) : 0;
 
@@ -38,20 +49,22 @@ export function DigitalTwin() {
       backgroundColor: "transparent",
       tooltip: {
         trigger: "axis",
-        backgroundColor: "rgba(8,13,25,0.95)",
-        textStyle: { color: "#E2E8F0", fontSize: 11, fontFamily: "JetBrains Mono" },
+        backgroundColor: pal.tooltipBg,
+        borderColor: pal.tooltipBorder,
+        textStyle: { color: pal.tooltipText, fontSize: 11, fontFamily: "JetBrains Mono" },
       },
       grid: { top: 20, left: 46, right: 12, bottom: 26 },
       xAxis: {
         type: "category",
         data: sectorValues.map((s) => s.code),
-        axisLabel: { color: "#94A3B8", fontSize: 10, fontFamily: "JetBrains Mono" },
+        axisLine: { lineStyle: { color: pal.axisLine } },
+        axisLabel: { color: pal.axisLabel, fontSize: 10, fontFamily: "JetBrains Mono" },
       },
       yAxis: {
         type: "value",
         max: 260,
-        splitLine: { lineStyle: { color: "rgba(148,163,184,0.08)" } },
-        axisLabel: { color: "#94A3B8", fontSize: 10, fontFamily: "JetBrains Mono" },
+        splitLine: { lineStyle: { color: pal.splitLine } },
+        axisLabel: { color: pal.axisLabel, fontSize: 10, fontFamily: "JetBrains Mono" },
       },
       series: [
         {
@@ -60,14 +73,14 @@ export function DigitalTwin() {
           data: sectorValues.map((s, i) => ({
             value: Number(s.mw.toFixed(1)),
             itemStyle: {
-              color: i === selectedIdx ? "#5CB8E4" : "#E5A93C",
+              color: i === selectedIdx ? pal.grid : pal.solar,
               borderRadius: [4, 4, 0, 0],
             },
           })),
         },
       ],
     };
-  }, [sectorValues, selectedIdx]);
+  }, [sectorValues, selectedIdx, pal]);
 
   if (!ds) return null;
 
@@ -87,10 +100,10 @@ export function DigitalTwin() {
     <div className="space-y-4">
       <div className="cad-panel rounded-2xl px-4 py-3 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-base sm:text-lg font-bold text-white">
+          <h1 className="font-display text-base sm:text-lg font-bold text-white light:text-slate-900">
             Pavagada 8-Block Spatial Digital Twin (13,000 Acres · 2,050 MW)
           </h1>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-400 light:text-slate-600">
             Real section_1_mw through section_8_mw telemetry shaded by instantaneous load &amp; cloud passage
           </p>
         </div>
@@ -98,13 +111,13 @@ export function DigitalTwin() {
         <div className="flex items-center gap-2">
           <button
             onClick={jumpToNoon}
-            className="inline-flex items-center gap-1.5 rounded-full border border-[#E5A93C]/45 bg-[#E5A93C]/12 px-3.5 py-1.5 text-xs font-medium text-[#F3C669] hover:bg-[#E5A93C]/22 cursor-pointer"
+            className="inline-flex items-center gap-1.5 rounded-full border border-[#E5A93C]/45 light:border-amber-600/40 bg-[#E5A93C]/12 light:bg-amber-500/12 px-3.5 py-1.5 text-xs font-medium text-[#F3C669] light:text-amber-700 hover:bg-[#E5A93C]/22 cursor-pointer"
           >
             <Sun className="w-3.5 h-3.5" /> Jump to Peak Sun
           </button>
           <button
             onClick={() => setIsPlaying(!isPlaying)}
-            className="inline-flex items-center gap-1.5 rounded-full bg-[#EDF2F7] px-3.5 py-1.5 text-xs font-semibold text-[#07080B] hover:bg-white cursor-pointer"
+            className="inline-flex items-center gap-1.5 rounded-full bg-[#EDF2F7] light:bg-slate-900 px-3.5 py-1.5 text-xs font-semibold text-[#07080B] light:text-white hover:bg-white light:hover:bg-slate-800 cursor-pointer"
           >
             {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
             <span>{isPlaying ? "Pause" : "Animate Day"}</span>
@@ -113,16 +126,14 @@ export function DigitalTwin() {
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
-        {/* Left: Interactive 8-Block Spatial Grid Map */}
         <div data-tour-id="dt-park-map" className="xl:col-span-7 cad-panel rounded-2xl p-5 relative overflow-hidden">
           <div className="flex items-center justify-between text-xs font-mono-num mb-4">
-            <span className="text-[#F3C669]">
-              PARK TOTAL OUTPUT: <strong className="text-white">{totalMw.toFixed(1)} / 2,050 MW</strong>
+            <span className="text-[#F3C669] light:text-amber-700">
+              PARK TOTAL OUTPUT: <strong className="text-white light:text-slate-900">{totalMw.toFixed(1)} / 2,050 MW</strong>
             </span>
-            <span className="text-[#8ED8F8]">{ds.timestamps[idx].replace("T", " ")} IST</span>
+            <span className="text-[#8ED8F8] light:text-sky-700">{ds.timestamps[idx].replace("T", " ")} IST</span>
           </div>
 
-          {/* Subtle Cloud Attenuation Mist */}
           <div
             className="pointer-events-none absolute inset-0 transition-opacity duration-500"
             style={{
@@ -136,35 +147,36 @@ export function DigitalTwin() {
             {sectorValues.map((sec, i) => {
               const isSel = i === selectedIdx;
               const heatAlpha = Math.max(0.12, Math.min(0.88, sec.util / 100));
+              const cardBg =
+                theme === "light"
+                  ? `linear-gradient(155deg, rgba(245,158,11,${heatAlpha * 0.28}), rgba(255,255,255,0.92))`
+                  : `linear-gradient(155deg, rgba(229,169,60,${heatAlpha * 0.36}), rgba(10,12,18,0.92))`;
               return (
                 <button
                   key={sec.key}
                   onClick={() => setSelectedIdx(i)}
                   className={`group text-left rounded-xl p-3.5 border transition-all cursor-pointer relative overflow-hidden ${
                     isSel
-                      ? "border-[#5CB8E4] ring-2 ring-[#5CB8E4]/35 scale-[1.02]"
-                      : "border-[#E5A93C]/25 hover:border-[#E5A93C]/60"
+                      ? "border-[#5CB8E4] light:border-sky-600 ring-2 ring-[#5CB8E4]/35 light:ring-sky-500/35 scale-[1.02]"
+                      : "border-[#E5A93C]/25 light:border-amber-600/25 hover:border-[#E5A93C]/60"
                   }`}
-                  style={{
-                    background: `linear-gradient(155deg, rgba(229,169,60,${heatAlpha * 0.36}), rgba(10,12,18,0.92))`,
-                  }}
+                  style={{ background: cardBg }}
                 >
-                  {/* Simulated PV Array Cell Lines */}
-                  <div className="grid grid-cols-4 gap-1 mb-2.5 opacity-60">
+                  <div className="grid grid-cols-4 gap-1 mb-2.5 opacity-70">
                     {[1, 2, 3, 4].map((cell) => (
                       <div
                         key={cell}
-                        className="h-2 rounded-xs bg-[#E5A93C]/55"
+                        className="h-2 rounded-xs bg-[#E5A93C]/60 light:bg-amber-500/70"
                         style={{ opacity: 0.25 + (sec.util / 100) * 0.75 }}
                       />
                     ))}
                   </div>
-                  <div className="text-[10px] font-mono-num text-[#F3C669]/80">{sec.code}</div>
-                  <div className="text-xs font-display font-bold text-white truncate">{sec.operator}</div>
-                  <div className="mt-1.5 font-mono-num text-sm font-bold text-white">
+                  <div className="text-[10px] font-mono-num text-[#F3C669]/85 light:text-amber-700">{sec.code}</div>
+                  <div className="text-xs font-display font-bold text-white light:text-slate-900 truncate">{sec.operator}</div>
+                  <div className="mt-1.5 font-mono-num text-sm font-bold text-white light:text-slate-900">
                     {sec.mw.toFixed(1)} MW
                   </div>
-                  <div className="text-[10px] font-mono-num text-slate-300">
+                  <div className="text-[10px] font-mono-num text-slate-300 light:text-slate-600">
                     {sec.util.toFixed(1)}% of {sec.capMw} MW
                   </div>
                 </button>
@@ -172,7 +184,7 @@ export function DigitalTwin() {
             })}
           </div>
 
-          <div className="mt-4 pt-3 border-t border-white/[0.08] flex items-center gap-3">
+          <div className="mt-4 pt-3 border-t border-white/[0.08] light:border-slate-900/10 flex items-center gap-3">
             <input
               type="range"
               min={0}
@@ -187,41 +199,42 @@ export function DigitalTwin() {
           </div>
         </div>
 
-        {/* Right: Block Inspector & Per-Sector Bar Chart */}
         <div data-tour-id="dt-block-inspector" className="xl:col-span-5 space-y-4">
           <div className="cad-panel rounded-2xl p-4 space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Building2 className="w-4 h-4 text-[#5CB8E4]" />
+                <Building2 className="w-4 h-4 text-[#5CB8E4] light:text-sky-600" />
                 <div>
-                  <div className="text-[10px] font-mono-num text-[#8ED8F8]">{selected.code} SELECTED</div>
-                  <h2 className="font-display text-base font-bold text-white">{selected.operator}</h2>
+                  <div className="text-[10px] font-mono-num text-[#8ED8F8] light:text-sky-700">{selected.code} SELECTED</div>
+                  <h2 className="font-display text-base font-bold text-white light:text-slate-900">{selected.operator}</h2>
                 </div>
               </div>
-              <span className="rounded-lg bg-[#E5A93C]/12 border border-[#E5A93C]/35 px-2.5 py-1 font-mono-num text-xs font-bold text-[#F3C669]">
+              <span className="rounded-lg bg-[#E5A93C]/12 light:bg-amber-500/12 border border-[#E5A93C]/35 light:border-amber-600/35 px-2.5 py-1 font-mono-num text-xs font-bold text-[#F3C669] light:text-amber-700">
                 {selected.mw.toFixed(1)} MW
               </span>
             </div>
 
             <div className="grid grid-cols-3 gap-2 text-center font-mono-num text-xs">
-              <div className="rounded-lg bg-white/[0.03] border border-white/[0.08] p-2.5">
-                <div className="text-[10px] text-slate-400">UTILIZATION</div>
-                <div className="text-sm font-bold text-white">{selected.util.toFixed(1)}%</div>
+              <div className="rounded-lg bg-white/[0.03] light:bg-slate-900/[0.04] border border-white/[0.08] light:border-slate-900/10 p-2.5">
+                <div className="text-[10px] text-slate-400 light:text-slate-500">UTILIZATION</div>
+                <div className="text-sm font-bold text-white light:text-slate-900">{selected.util.toFixed(1)}%</div>
               </div>
-              <div className="rounded-lg bg-white/[0.03] border border-white/[0.08] p-2.5">
-                <div className="text-[10px] text-slate-400">CLEAR-SKY</div>
-                <div className="text-sm font-bold text-[#F3C669]">{clearRatio.toFixed(0)}%</div>
+              <div className="rounded-lg bg-white/[0.03] light:bg-slate-900/[0.04] border border-white/[0.08] light:border-slate-900/10 p-2.5">
+                <div className="text-[10px] text-slate-400 light:text-slate-500">CLEAR-SKY</div>
+                <div className="text-sm font-bold text-[#F3C669] light:text-amber-700">{clearRatio.toFixed(0)}%</div>
               </div>
-              <div className="rounded-lg bg-white/[0.03] border border-white/[0.08] p-2.5">
-                <div className="text-[10px] text-slate-400">MOD TEMP</div>
-                <div className="text-sm font-bold text-[#8ED8F8]">{ds.weather.module_temp[idx].toFixed(1)}°C</div>
+              <div className="rounded-lg bg-white/[0.03] light:bg-slate-900/[0.04] border border-white/[0.08] light:border-slate-900/10 p-2.5">
+                <div className="text-[10px] text-slate-400 light:text-slate-500">MOD TEMP</div>
+                <div className="text-sm font-bold text-[#8ED8F8] light:text-sky-700">
+                  {ds.weather.module_temp[idx].toFixed(1)}°C
+                </div>
               </div>
             </div>
           </div>
 
           <div className="cad-panel rounded-2xl p-4">
-            <h3 className="font-display text-sm font-bold text-white flex items-center gap-1.5 mb-2">
-              <Zap className="w-4 h-4 text-[#E5A93C]" /> Simultaneous Sector Output Profile
+            <h3 className="font-display text-sm font-bold text-white light:text-slate-900 flex items-center gap-1.5 mb-2">
+              <Zap className="w-4 h-4 text-[#E5A93C] light:text-amber-600" /> Simultaneous Sector Output Profile
             </h3>
             <EChartBox option={barOption} height={225} />
           </div>
@@ -230,4 +243,3 @@ export function DigitalTwin() {
     </div>
   );
 }
-

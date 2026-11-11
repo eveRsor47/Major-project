@@ -7,6 +7,7 @@ import type {
   RoomId,
   SplitDataset,
   SplitId,
+  ThemeMode,
 } from "../types";
 import { TOUR_BY_ROOM } from "../utils/metrics";
 import { sfx } from "../utils/sfx";
@@ -18,6 +19,23 @@ export interface QuestProgress {
   auditedLeaderboard: boolean;
 }
 
+const syncHtmlTheme = (mode: ThemeMode) => {
+  if (typeof document === "undefined") return;
+  const root = document.documentElement;
+  root.classList.remove("dark", "light");
+  root.classList.add(mode);
+};
+
+const readStoredTheme = (): ThemeMode => {
+  try {
+    return typeof localStorage !== "undefined" && localStorage.getItem("gridpulse-theme") === "light"
+      ? "light"
+      : "dark";
+  } catch {
+    return "dark";
+  }
+};
+
 interface GridState {
   phase: AppPhase;
   storyScene: number; // 0..4 (Scenes 1..5)
@@ -26,6 +44,10 @@ interface GridState {
   activeSplit: SplitId;
   cursorIndex: number;
   isPlaying: boolean;
+
+  theme: ThemeMode;
+  bgMotionEnabled: boolean;
+  cmdPaletteOpen: boolean;
 
   manifest: ManifestData | null;
   benchmarks: BenchmarksPayload | null;
@@ -54,6 +76,11 @@ interface GridState {
   setCursorIndex: (idx: number) => void;
   setIsPlaying: (playing: boolean) => void;
 
+  toggleTheme: () => void;
+  setTheme: (theme: ThemeMode) => void;
+  toggleBgMotion: () => void;
+  setCmdPaletteOpen: (open: boolean) => void;
+
   startTourForCurrentRoom: () => void;
   nextTourStep: () => void;
   prevTourStep: () => void;
@@ -67,6 +94,7 @@ interface GridState {
 }
 
 const INITIAL_SEEN: Record<RoomId, boolean> = {
+  home: true,
   "mission-control": false,
   "neural-mixer": false,
   "cloud-radar": false,
@@ -83,6 +111,10 @@ export const useGridStore = create<GridState>((set, get) => ({
   activeSplit: "test_2026",
   cursorIndex: 132, // Clear daytime solar peak in Jan 2026
   isPlaying: false,
+
+  theme: readStoredTheme(),
+  bgMotionEnabled: true,
+  cmdPaletteOpen: false,
 
   manifest: null,
   benchmarks: null,
@@ -108,10 +140,13 @@ export const useGridStore = create<GridState>((set, get) => ({
   setPhase: (phase) => {
     set({ phase });
     if (phase === "app") {
+      syncHtmlTheme(get().theme);
       const { activeRoom, seenRooms } = get();
       if (!seenRooms[activeRoom]) {
         set({ tourActive: true, tourStepIndex: 0 });
       }
+    } else {
+      syncHtmlTheme("dark");
     }
   },
 
@@ -128,6 +163,7 @@ export const useGridStore = create<GridState>((set, get) => ({
       activeRoom: room,
       tourActive: shouldGuide,
       tourStepIndex: 0,
+      cmdPaletteOpen: false,
     });
   },
 
@@ -172,6 +208,31 @@ export const useGridStore = create<GridState>((set, get) => ({
 
   setIsPlaying: (isPlaying) => set({ isPlaying }),
 
+  toggleTheme: () => {
+    const next: ThemeMode = get().theme === "dark" ? "light" : "dark";
+    sfx.playTick(next === "light" ? 780 : 520, 0.045, 0.02);
+    try {
+      localStorage.setItem("gridpulse-theme", next);
+    } catch {}
+    if (get().phase === "app") syncHtmlTheme(next);
+    set({ theme: next });
+  },
+
+  setTheme: (theme) => {
+    try {
+      localStorage.setItem("gridpulse-theme", theme);
+    } catch {}
+    if (get().phase === "app") syncHtmlTheme(theme);
+    set({ theme });
+  },
+
+  toggleBgMotion: () => {
+    sfx.playTick(600, 0.04, 0.02);
+    set((s) => ({ bgMotionEnabled: !s.bgMotionEnabled }));
+  },
+
+  setCmdPaletteOpen: (cmdPaletteOpen) => set({ cmdPaletteOpen }),
+
   startTourForCurrentRoom: () => {
     sfx.playTick(700, 0.06, 0.03);
     set({ tourActive: true, tourStepIndex: 0 });
@@ -212,10 +273,12 @@ export const useGridStore = create<GridState>((set, get) => ({
 
   replayStory: () => {
     sfx.playSceneTransition(0);
+    syncHtmlTheme("dark");
     set({
       phase: "story",
       storyScene: 0,
       tourActive: false,
+      cmdPaletteOpen: false,
       seenRooms: { ...INITIAL_SEEN },
     });
   },
@@ -264,4 +327,3 @@ export const useGridStore = create<GridState>((set, get) => ({
     return s.testData;
   },
 }));
-

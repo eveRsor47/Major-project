@@ -1,6 +1,8 @@
 export type ProblemId = "S1" | "S24" | "D1" | "D24";
 export type SplitId = "test_2026" | "val_2025";
+export type ThemeMode = "dark" | "light";
 export type RoomId =
+  | "home"
   | "mission-control"
   | "neural-mixer"
   | "cloud-radar"

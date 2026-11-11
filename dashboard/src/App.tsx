@@ -4,6 +4,8 @@ import { useGridStore } from "./store/useGridStore";
 import { StoryIntro } from "./components/StoryIntro";
 import { ControlRoomShell } from "./components/ControlRoomShell";
 import { SpotlightTour } from "./components/SpotlightTour";
+import { CommandPalette } from "./components/CommandPalette";
+import { HomeHub } from "./rooms/HomeHub";
 import { MissionControl } from "./rooms/MissionControl";
 import { NeuralMixer } from "./rooms/NeuralMixer";
 import { CloudRadar } from "./rooms/CloudRadar";
@@ -57,6 +59,7 @@ export default function App() {
                   exit={{ opacity: 0, y: -6 }}
                   transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
                 >
+                  {activeRoom === "home" && <HomeHub />}
                   {activeRoom === "mission-control" && <MissionControl />}
                   {activeRoom === "neural-mixer" && <NeuralMixer />}
                   {activeRoom === "cloud-radar" && <CloudRadar />}
@@ -70,7 +73,12 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {phase === "app" && <SpotlightTour />}
+      {phase === "app" && (
+        <>
+          <SpotlightTour />
+          <CommandPalette />
+        </>
+      )}
     </>
   );
 }

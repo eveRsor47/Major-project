@@ -147,6 +147,7 @@ export const PROBLEM_META: Record<
 };
 
 export const ROOM_META: Array<{ id: RoomId; label: string; shortLabel: string; subtitle: string }> = [
+  { id: "home", label: "Home Hub", shortLabel: "Home", subtitle: "GridPulse Command Overview & Portal" },
   { id: "mission-control", label: "Mission Control", shortLabel: "Control", subtitle: "Live Multi-Horizon Telemetry & Duck Curve" },
   { id: "neural-mixer", label: "Neural Mixer", shortLabel: "Mixer", subtitle: "5-DL Ensemble Weight Synthesizer & Seasons" },
   { id: "cloud-radar", label: "Cloud Radar", shortLabel: "Radar", subtitle: "Ramp Interception, P10–P90 Bands & Derating" },
@@ -156,6 +157,22 @@ export const ROOM_META: Array<{ id: RoomId; label: string; shortLabel: string; s
 ];
 
 export const TOUR_BY_ROOM: Record<RoomId, TourStep[]> = {
+  home: [
+    {
+      targetId: "home-brand-nav",
+      title: "GridPulse Command Home",
+      description:
+        "Click the GridPulse emblem at any time from anywhere in the app to return to this central executive launchpad and check system health.",
+      placement: "bottom",
+    },
+    {
+      targetId: "home-room-grid",
+      title: "Specialized Telemetry Workspaces",
+      description:
+        "Launch any of the 6 specialized KSLDC modules below, or press Ctrl+K anywhere to jump directly between rooms, horizons, and grid scenarios.",
+      placement: "top",
+    },
+  ],
   "mission-control": [
     {
       targetId: "mc-hero-kpis",
