@@ -29,7 +29,7 @@ def test_manifest_and_benchmarks_integrity():
     manifest = json.loads((DATA_DIR / "manifest.json").read_text(encoding="utf-8"))
     assert manifest["brand"] == "GridPulse"
     assert manifest["site"]["capacity_mw"] == pytest.approx(2050.0)
-    assert manifest["verification"]["pytest_passed"] == 92
+    assert manifest["verification"]["pytest_passed"] == 97
     assert manifest["verification"]["models_evaluated_test"] == 148
 
     bench = json.loads((DATA_DIR / "benchmarks.json").read_text(encoding="utf-8"))
@@ -79,6 +79,7 @@ def test_frontend_components_exist():
         DASHBOARD_DIR / "src" / "App.tsx",
         DASHBOARD_DIR / "src" / "store" / "useGridStore.ts",
         DASHBOARD_DIR / "src" / "components" / "GridPulseLogo.tsx",
+        DASHBOARD_DIR / "src" / "components" / "StoryCanvas.tsx",
         DASHBOARD_DIR / "src" / "components" / "StoryIntro.tsx",
         DASHBOARD_DIR / "src" / "components" / "SpotlightTour.tsx",
         DASHBOARD_DIR / "src" / "components" / "ControlRoomShell.tsx",

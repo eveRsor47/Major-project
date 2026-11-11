@@ -130,21 +130,21 @@ export function NeuralMixer() {
           type: "line",
           showSymbol: false,
           data: prob.y_true.slice(0, sliceLen),
-          lineStyle: { width: 2.2, color: "#F8FAFC" },
+          lineStyle: { width: 2.2, color: "#EDF2F7" },
         },
         {
           name: "Your Live Neural Mix",
           type: "line",
           showSymbol: false,
           data: liveBlend.slice(0, sliceLen),
-          lineStyle: { width: 2.4, color: "#F59E0B" },
+          lineStyle: { width: 2.4, color: "#E5A93C" },
         },
         {
           name: "Champion Stacking Ridge",
           type: "line",
           showSymbol: false,
           data: prob.y_pred_post.slice(0, sliceLen),
-          lineStyle: { width: 1.8, type: "dashed", color: "#06B6D4" },
+          lineStyle: { width: 1.8, type: "dashed", color: "#5CB8E4" },
         },
       ],
     };
@@ -158,9 +158,9 @@ export function NeuralMixer() {
     const seasons = ["Winter", "Summer", "Monsoon", "PostMon"];
     const methods = [
       { key: "equal_weight", name: "Equal Weight", color: "#64748B" },
-      { key: "nnls", name: "NNLS", color: "#F59E0B" },
-      { key: "stacking_ridge", name: "Stacking Ridge", color: "#06B6D4" },
-      { key: "residual_hybrid", name: "Residual Hybrid", color: "#A855F7" },
+      { key: "nnls", name: "NNLS", color: "#E5A93C" },
+      { key: "stacking_ridge", name: "Stacking Ridge", color: "#5CB8E4" },
+      { key: "residual_hybrid", name: "Residual Hybrid", color: "#9F8FEF" },
     ];
     return {
       backgroundColor: "transparent",
@@ -219,10 +219,10 @@ export function NeuralMixer() {
             <button
               key={pid}
               onClick={() => setProblem(pid)}
-              className={`rounded-lg px-3 py-1.5 text-xs font-mono-num font-semibold transition cursor-pointer ${
+              className={`rounded-full px-3 py-1.5 text-xs font-mono-num font-semibold transition cursor-pointer ${
                 activeProblem === pid
-                  ? "bg-cyan-400 text-slate-950"
-                  : "border border-slate-700 bg-slate-900/70 text-slate-300 hover:border-slate-500"
+                  ? "bg-[#EDF2F7] text-[#07080B]"
+                  : "border border-white/10 bg-white/[0.03] text-slate-300 hover:border-white/25"
               }`}
             >
               {pid} · {PROBLEM_META[pid].horizon}
@@ -237,21 +237,21 @@ export function NeuralMixer() {
           <div
             key={row.id}
             className={`cad-panel rounded-2xl p-4 relative ${
-              idx === 0 ? "border-emerald-400/50 bg-emerald-950/15" : ""
+              idx === 0 ? "border-[#34D399]/40 bg-[#34D399]/[0.06]" : ""
             }`}
           >
             <div className="flex items-center justify-between text-[11px] font-mono-num">
-              <span className={idx === 0 ? "text-emerald-300 font-bold" : "text-slate-400"}>
+              <span className={idx === 0 ? "text-[#6EE7B7] font-bold" : "text-slate-400"}>
                 RANK #{idx + 1} · {row.tag}
               </span>
-              {idx === 0 && <Trophy className="w-4 h-4 text-amber-400" />}
+              {idx === 0 && <Trophy className="w-4 h-4 text-[#E5A93C]" />}
             </div>
             <div className="mt-1.5 font-display text-sm font-bold text-white">{row.label}</div>
             <div className="mt-2 flex items-baseline justify-between font-mono-num">
-              <span className="text-xl font-bold text-cyan-300">{row.metrics.rmse.toFixed(2)} MW</span>
+              <span className="text-xl font-bold text-[#8ED8F8]">{row.metrics.rmse.toFixed(2)} MW</span>
               <span className="text-xs text-slate-400">R² {row.metrics.r2.toFixed(4)}</span>
             </div>
-            <div className="mt-1 text-[11px] font-mono-num text-emerald-300/90">
+            <div className="mt-1 text-[11px] font-mono-num text-[#6EE7B7]/90">
               MAE {row.metrics.mae.toFixed(2)} MW · Skill +{row.metrics.skillPct.toFixed(1)}%
             </div>
           </div>
@@ -274,13 +274,13 @@ export function NeuralMixer() {
               <button
                 data-tour-id="nm-nnls-btn"
                 onClick={handleSolveNnls}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-semibold text-slate-950 hover:bg-emerald-400 transition cursor-pointer shadow-[0_0_16px_rgba(16,185,129,0.3)]"
+                className="inline-flex items-center gap-1.5 rounded-full bg-[#34D399] px-3.5 py-1.5 text-xs font-semibold text-[#07080B] hover:bg-[#6EE7B7] transition cursor-pointer"
               >
                 <Sparkles className="w-3.5 h-3.5" /> Optimize via NNLS
               </button>
               <button
                 onClick={handleEqualize}
-                className="rounded-lg border border-slate-700 bg-slate-900 px-2.5 py-1.5 text-xs text-slate-300 hover:border-slate-500 cursor-pointer"
+                className="rounded-full border border-white/10 bg-white/[0.03] p-2 text-slate-300 hover:border-white/25 cursor-pointer"
                 title="Reset to Equal 20% Weights"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
@@ -314,7 +314,7 @@ export function NeuralMixer() {
                     onChange={(e) =>
                       setWeights((w) => ({ ...w, [key]: Number(e.target.value) }))
                     }
-                    className="w-full accent-cyan-400 cursor-pointer"
+                    className="w-full cursor-pointer"
                   />
                 </div>
               );
@@ -322,13 +322,13 @@ export function NeuralMixer() {
           </div>
 
           {isSolar && (
-            <label className="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-900/60 px-3 py-2 text-xs cursor-pointer">
+            <label className="flex items-center justify-between rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-xs cursor-pointer">
               <span className="text-slate-300">Apply M9 Night Zenith ≥ 90° Clamp</span>
               <input
                 type="checkbox"
                 checked={applyNightClamp}
                 onChange={(e) => setApplyNightClamp(e.target.checked)}
-                className="accent-emerald-400 w-4 h-4"
+                className="accent-[#34D399] w-4 h-4"
               />
             </label>
           )}
@@ -338,11 +338,11 @@ export function NeuralMixer() {
             key={`${liveMetrics.rmse.toFixed(2)}`}
             initial={{ scale: 0.99 }}
             animate={{ scale: 1 }}
-            className="rounded-xl border border-amber-500/35 bg-amber-950/15 p-3.5 grid grid-cols-3 gap-2 text-center font-mono-num"
+            className="cad-panel-amber rounded-xl p-3.5 grid grid-cols-3 gap-2 text-center font-mono-num"
           >
             <div>
               <div className="text-[10px] text-slate-400">LIVE MIX RMSE</div>
-              <div className="text-lg font-bold text-amber-300">{liveMetrics.rmse.toFixed(2)}</div>
+              <div className="text-lg font-bold text-[#F3C669]">{liveMetrics.rmse.toFixed(2)}</div>
               <div className="text-[10px] text-slate-400">
                 {deltaVsChamp >= 0 ? `+${deltaVsChamp.toFixed(2)}` : deltaVsChamp.toFixed(2)} vs Ridge
               </div>
@@ -354,7 +354,7 @@ export function NeuralMixer() {
             </div>
             <div>
               <div className="text-[10px] text-slate-400">SKILL SCORE</div>
-              <div className="text-lg font-bold text-emerald-300">+{liveMetrics.skillPct.toFixed(1)}%</div>
+              <div className="text-lg font-bold text-[#6EE7B7]">+{liveMetrics.skillPct.toFixed(1)}%</div>
               <div className="text-[10px] text-slate-400">vs Persistence</div>
             </div>
           </motion.div>
@@ -373,7 +373,7 @@ export function NeuralMixer() {
           </div>
 
           <div data-tour-id="nm-seasonal" className="cad-panel rounded-2xl p-4">
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between gap-2 mb-2">
               <div>
                 <h3 className="font-display text-sm font-bold text-white">
                   M8 Seasonal Error Decomposition (Validation 2025)
@@ -382,7 +382,7 @@ export function NeuralMixer() {
                   Evaluates Winter, Summer, Southwest Monsoon, and Post-Monsoon regimes for {activeProblem}
                 </p>
               </div>
-              <span className="rounded px-2 py-0.5 text-[10px] font-mono-num bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
+              <span className="shrink-0 whitespace-nowrap rounded px-2 py-0.5 text-[10px] font-mono-num bg-[#5CB8E4]/15 text-[#8ED8F8] border border-[#5CB8E4]/30">
                 8,737 Hours Audited
               </span>
             </div>

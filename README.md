@@ -46,7 +46,7 @@ MAJOR PROJECT/
 │   ├── public/data/         # Verified JSON telemetry bundles (test_2026, val_2025, benchmarks, manifest)
 │   ├── public/favicon.svg   # GridPulse d ↔ p Yin-Yang brand icon
 │   ├── src/
-│   │   ├── components/      # StoryIntro (5-scene animation), GridPulseLogo (d ↔ p swing), SpotlightTour, ControlRoomShell
+│   │   ├── components/      # StoryCanvas (60fps 3D terrain & vortex engine), StoryIntro (5-scene animation), GridPulseLogo (d ↔ p swing), SpotlightTour, ControlRoomShell
 │   │   ├── rooms/           # MissionControl, NeuralMixer, CloudRadar, DigitalTwin, VivaWarRoom, KsldcCompliance
 │   │   ├── store/           # Zustand real-time telemetry state & tour manager
 │   │   └── utils/           # Live RMSE/MAE/R²/Skill computation, Web Audio SFX & tour guides

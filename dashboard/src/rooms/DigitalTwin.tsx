@@ -60,7 +60,7 @@ export function DigitalTwin() {
           data: sectorValues.map((s, i) => ({
             value: Number(s.mw.toFixed(1)),
             itemStyle: {
-              color: i === selectedIdx ? "#38BDF8" : "#F59E0B",
+              color: i === selectedIdx ? "#5CB8E4" : "#E5A93C",
               borderRadius: [4, 4, 0, 0],
             },
           })),
@@ -98,13 +98,13 @@ export function DigitalTwin() {
         <div className="flex items-center gap-2">
           <button
             onClick={jumpToNoon}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-amber-400/50 bg-amber-500/15 px-3 py-1.5 text-xs font-medium text-amber-200 hover:bg-amber-500/25 cursor-pointer"
+            className="inline-flex items-center gap-1.5 rounded-full border border-[#E5A93C]/45 bg-[#E5A93C]/12 px-3.5 py-1.5 text-xs font-medium text-[#F3C669] hover:bg-[#E5A93C]/22 cursor-pointer"
           >
             <Sun className="w-3.5 h-3.5" /> Jump to Peak Sun
           </button>
           <button
             onClick={() => setIsPlaying(!isPlaying)}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-cyan-500 px-3 py-1.5 text-xs font-semibold text-slate-950 hover:bg-cyan-400 cursor-pointer"
+            className="inline-flex items-center gap-1.5 rounded-full bg-[#EDF2F7] px-3.5 py-1.5 text-xs font-semibold text-[#07080B] hover:bg-white cursor-pointer"
           >
             {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
             <span>{isPlaying ? "Pause" : "Animate Day"}</span>
@@ -116,10 +116,10 @@ export function DigitalTwin() {
         {/* Left: Interactive 8-Block Spatial Grid Map */}
         <div data-tour-id="dt-park-map" className="xl:col-span-7 cad-panel rounded-2xl p-5 relative overflow-hidden">
           <div className="flex items-center justify-between text-xs font-mono-num mb-4">
-            <span className="text-amber-300">
+            <span className="text-[#F3C669]">
               PARK TOTAL OUTPUT: <strong className="text-white">{totalMw.toFixed(1)} / 2,050 MW</strong>
             </span>
-            <span className="text-cyan-300">{ds.timestamps[idx].replace("T", " ")} IST</span>
+            <span className="text-[#8ED8F8]">{ds.timestamps[idx].replace("T", " ")} IST</span>
           </div>
 
           {/* Subtle Cloud Attenuation Mist */}
@@ -142,11 +142,11 @@ export function DigitalTwin() {
                   onClick={() => setSelectedIdx(i)}
                   className={`group text-left rounded-xl p-3.5 border transition-all cursor-pointer relative overflow-hidden ${
                     isSel
-                      ? "border-cyan-400 ring-2 ring-cyan-400/40 scale-[1.02]"
-                      : "border-amber-500/30 hover:border-amber-400"
+                      ? "border-[#5CB8E4] ring-2 ring-[#5CB8E4]/35 scale-[1.02]"
+                      : "border-[#E5A93C]/25 hover:border-[#E5A93C]/60"
                   }`}
                   style={{
-                    background: `linear-gradient(155deg, rgba(245,158,11,${heatAlpha * 0.45}), rgba(10,16,30,0.92))`,
+                    background: `linear-gradient(155deg, rgba(229,169,60,${heatAlpha * 0.36}), rgba(10,12,18,0.92))`,
                   }}
                 >
                   {/* Simulated PV Array Cell Lines */}
@@ -154,12 +154,12 @@ export function DigitalTwin() {
                     {[1, 2, 3, 4].map((cell) => (
                       <div
                         key={cell}
-                        className="h-2 rounded-xs bg-amber-300/60"
+                        className="h-2 rounded-xs bg-[#E5A93C]/55"
                         style={{ opacity: 0.25 + (sec.util / 100) * 0.75 }}
                       />
                     ))}
                   </div>
-                  <div className="text-[10px] font-mono-num text-amber-200/80">{sec.code}</div>
+                  <div className="text-[10px] font-mono-num text-[#F3C669]/80">{sec.code}</div>
                   <div className="text-xs font-display font-bold text-white truncate">{sec.operator}</div>
                   <div className="mt-1.5 font-mono-num text-sm font-bold text-white">
                     {sec.mw.toFixed(1)} MW
@@ -172,7 +172,7 @@ export function DigitalTwin() {
             })}
           </div>
 
-          <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center gap-3">
+          <div className="mt-4 pt-3 border-t border-white/[0.08] flex items-center gap-3">
             <input
               type="range"
               min={0}
@@ -182,7 +182,7 @@ export function DigitalTwin() {
                 setIsPlaying(false);
                 setCursorIndex(Number(e.target.value));
               }}
-              className="flex-1 accent-amber-400 cursor-pointer"
+              className="flex-1 cursor-pointer"
             />
           </div>
         </div>
@@ -192,36 +192,36 @@ export function DigitalTwin() {
           <div className="cad-panel rounded-2xl p-4 space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Building2 className="w-4 h-4 text-cyan-400" />
+                <Building2 className="w-4 h-4 text-[#5CB8E4]" />
                 <div>
-                  <div className="text-[10px] font-mono-num text-cyan-300">{selected.code} SELECTED</div>
+                  <div className="text-[10px] font-mono-num text-[#8ED8F8]">{selected.code} SELECTED</div>
                   <h2 className="font-display text-base font-bold text-white">{selected.operator}</h2>
                 </div>
               </div>
-              <span className="rounded-lg bg-amber-500/15 border border-amber-400/40 px-2.5 py-1 font-mono-num text-xs font-bold text-amber-300">
+              <span className="rounded-lg bg-[#E5A93C]/12 border border-[#E5A93C]/35 px-2.5 py-1 font-mono-num text-xs font-bold text-[#F3C669]">
                 {selected.mw.toFixed(1)} MW
               </span>
             </div>
 
             <div className="grid grid-cols-3 gap-2 text-center font-mono-num text-xs">
-              <div className="rounded-lg bg-slate-900/80 border border-slate-800 p-2.5">
+              <div className="rounded-lg bg-white/[0.03] border border-white/[0.08] p-2.5">
                 <div className="text-[10px] text-slate-400">UTILIZATION</div>
                 <div className="text-sm font-bold text-white">{selected.util.toFixed(1)}%</div>
               </div>
-              <div className="rounded-lg bg-slate-900/80 border border-slate-800 p-2.5">
+              <div className="rounded-lg bg-white/[0.03] border border-white/[0.08] p-2.5">
                 <div className="text-[10px] text-slate-400">CLEAR-SKY</div>
-                <div className="text-sm font-bold text-amber-300">{clearRatio.toFixed(0)}%</div>
+                <div className="text-sm font-bold text-[#F3C669]">{clearRatio.toFixed(0)}%</div>
               </div>
-              <div className="rounded-lg bg-slate-900/80 border border-slate-800 p-2.5">
+              <div className="rounded-lg bg-white/[0.03] border border-white/[0.08] p-2.5">
                 <div className="text-[10px] text-slate-400">MOD TEMP</div>
-                <div className="text-sm font-bold text-cyan-300">{ds.weather.module_temp[idx].toFixed(1)}°C</div>
+                <div className="text-sm font-bold text-[#8ED8F8]">{ds.weather.module_temp[idx].toFixed(1)}°C</div>
               </div>
             </div>
           </div>
 
           <div className="cad-panel rounded-2xl p-4">
             <h3 className="font-display text-sm font-bold text-white flex items-center gap-1.5 mb-2">
-              <Zap className="w-4 h-4 text-amber-400" /> Simultaneous Sector Output Profile
+              <Zap className="w-4 h-4 text-[#E5A93C]" /> Simultaneous Sector Output Profile
             </h3>
             <EChartBox option={barOption} height={225} />
           </div>

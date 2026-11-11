@@ -12,11 +12,11 @@ export interface LiveMetrics {
 }
 
 export const DL_MODEL_LABELS: Record<keyof ProblemSeries["members"], { name: string; color: string }> = {
-  bilstm: { name: "BiLSTM", color: "#38BDF8" },
-  gru: { name: "GRU", color: "#A855F7" },
-  cnn_lstm: { name: "CNN-LSTM", color: "#F59E0B" },
-  dlinear: { name: "DLinear", color: "#10B981" },
-  lstm: { name: "LSTM", color: "#EC4899" },
+  bilstm: { name: "BiLSTM", color: "#5CB8E4" },
+  gru: { name: "GRU", color: "#9F8FEF" },
+  cnn_lstm: { name: "CNN-LSTM", color: "#E5A93C" },
+  dlinear: { name: "DLinear", color: "#34D399" },
+  lstm: { name: "LSTM", color: "#E07A9B" },
 };
 
 export function computeMetrics(
@@ -267,7 +267,7 @@ export const TOUR_BY_ROOM: Record<RoomId, TourStep[]> = {
       targetId: "vw-seal",
       title: "Zero-Leakage Cryptographic & Test Audit",
       description:
-        "Summarizes strict chronological isolation (2021–24 Train → 2025 Val → 2026 Quarantined Test) and the 92/92 automated pytest engineering suite.",
+        "Summarizes strict chronological isolation (2021–24 Train → 2025 Val → 2026 Quarantined Test) and the 97/97 automated pytest engineering suite.",
       placement: "bottom",
     },
     {

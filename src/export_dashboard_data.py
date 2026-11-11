@@ -302,8 +302,8 @@ def main() -> None:
             "test_range": "2026-01-01 to 2026-02-28 (1,416 raw / 1,393 seq hrs — Quarantined)",
         },
         "verification": {
-            "pytest_passed": 92,
-            "pytest_total": 92,
+            "pytest_passed": 97,
+            "pytest_total": 97,
             "models_evaluated_test": int(len(m10_bench)),
             "dl_champions": 5,
             "optuna_studies": 20,

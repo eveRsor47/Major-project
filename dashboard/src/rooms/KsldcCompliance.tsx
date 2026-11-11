@@ -89,7 +89,7 @@ export function KsldcCompliance() {
 
         <button
           onClick={() => window.print()}
-          className="no-print inline-flex items-center gap-1.5 rounded-lg bg-cyan-500 px-3.5 py-2 text-xs font-semibold text-slate-950 hover:bg-cyan-400 transition cursor-pointer"
+          className="no-print inline-flex items-center gap-1.5 rounded-full bg-[#EDF2F7] px-4 py-2 text-xs font-semibold text-[#07080B] hover:bg-white transition cursor-pointer"
         >
           <Printer className="w-4 h-4" /> Print / Export Dossier (PDF)
         </button>
@@ -99,7 +99,7 @@ export function KsldcCompliance() {
       <section data-tour-id="kc-dsm-sim" className="cad-panel rounded-2xl p-5 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <Calculator className="w-4 h-4 text-amber-400" />
+            <Calculator className="w-4 h-4 text-[#E5A93C]" />
             <h2 className="font-display text-base font-bold text-white">
               ±10% DSM Band Deviation Settlement Simulator
             </h2>
@@ -109,7 +109,7 @@ export function KsldcCompliance() {
             <select
               value={dsmProb}
               onChange={(e) => setDsmProb(e.target.value as ProblemId)}
-              className="rounded-lg border border-slate-700 bg-slate-900 px-2.5 py-1.5 text-slate-200"
+              className="rounded-lg border border-white/10 bg-[#0D1017] px-2.5 py-1.5 text-slate-200"
             >
               <option value="S1">S1 (Solar 1h)</option>
               <option value="S24">S24 (Solar 24h)</option>
@@ -126,15 +126,15 @@ export function KsldcCompliance() {
                 step={50}
                 value={penaltyRateInrPerMwh}
                 onChange={(e) => setPenaltyRateInrPerMwh(Number(e.target.value))}
-                className="w-28 accent-amber-400 cursor-pointer"
+                className="w-28 cursor-pointer"
               />
             </label>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-3.5 font-mono-num">
-          <div className="rounded-xl border border-emerald-500/45 bg-emerald-950/20 p-4">
-            <div className="text-[11px] text-emerald-300 flex items-center gap-1">
+          <div className="rounded-xl border border-[#34D399]/35 bg-[#34D399]/[0.06] p-4">
+            <div className="text-[11px] text-[#6EE7B7] flex items-center gap-1">
               <ShieldCheck className="w-3.5 h-3.5" /> CHAMPION STACKING + M9
             </div>
             <div className="mt-1.5 text-2xl font-bold text-white">
@@ -143,13 +143,13 @@ export function KsldcCompliance() {
             <div className="text-[11px] text-slate-300">
               {dsmSimulation.champ.violations} breaches / {dsmSimulation.champ.activeHours} hrs
             </div>
-            <div className="mt-1 text-xs text-emerald-300">
+            <div className="mt-1 text-xs text-[#6EE7B7]">
               Penalty: ₹{(dsmSimulation.champ.penaltyInr / 100000).toFixed(2)} Lakhs
             </div>
           </div>
 
-          <div className="rounded-xl border border-slate-700 bg-slate-900/70 p-4">
-            <div className="text-[11px] text-cyan-300">SINGLE MODEL (UNTUNED LSTM)</div>
+          <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-4">
+            <div className="text-[11px] text-[#8ED8F8]">SINGLE MODEL (UNTUNED LSTM)</div>
             <div className="mt-1.5 text-2xl font-bold text-white">
               {dsmSimulation.lstm.compliancePct.toFixed(2)}%
             </div>
@@ -161,22 +161,22 @@ export function KsldcCompliance() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-red-500/35 bg-red-950/15 p-4">
-            <div className="text-[11px] text-red-300">NAIVE PERSISTENCE BASELINE</div>
+          <div className="rounded-xl border border-[#F46060]/30 bg-[#F46060]/[0.06] p-4">
+            <div className="text-[11px] text-[#FCA5A5]">NAIVE PERSISTENCE BASELINE</div>
             <div className="mt-1.5 text-2xl font-bold text-white">
               {dsmSimulation.persist.compliancePct.toFixed(2)}%
             </div>
             <div className="text-[11px] text-slate-400">
               {dsmSimulation.persist.violations} breaches / {dsmSimulation.persist.activeHours} hrs
             </div>
-            <div className="mt-1 text-xs text-red-300">
+            <div className="mt-1 text-xs text-[#FCA5A5]">
               Penalty: ₹{(dsmSimulation.persist.penaltyInr / 100000).toFixed(2)} Lakhs
             </div>
           </div>
 
-          <div className="rounded-xl border border-amber-400/50 bg-amber-950/20 p-4 flex flex-col justify-center">
-            <div className="text-[11px] text-amber-300">NET SAVINGS VS PERSISTENCE</div>
-            <div className="mt-1 text-2xl font-bold text-amber-300">
+          <div className="cad-panel-amber rounded-xl p-4 flex flex-col justify-center">
+            <div className="text-[11px] text-[#F3C669]">NET SAVINGS VS PERSISTENCE</div>
+            <div className="mt-1 text-2xl font-bold text-[#F3C669]">
               ₹{Math.max(0, dsmSimulation.savedVsPersistLakhs).toFixed(2)} Lakhs
             </div>
             <div className="text-[11px] text-slate-300 mt-1">
@@ -190,15 +190,15 @@ export function KsldcCompliance() {
       <section data-tour-id="kc-matrix" className="cad-panel rounded-2xl p-5">
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-display text-base font-bold text-white flex items-center gap-2">
-            <FileText className="w-4 h-4 text-cyan-400" />
+            <FileText className="w-4 h-4 text-[#5CB8E4]" />
             Verified Champion Multi-Horizon Scorecard ({activeSplit === "test_2026" ? "Test 2026" : "Val 2025"})
           </h2>
           <span className="text-xs font-mono-num text-slate-400">Stacking Ridge + M9 Constraints</span>
         </div>
 
-        <div className="overflow-x-auto rounded-xl border border-slate-800">
+        <div className="overflow-x-auto rounded-xl border border-white/[0.08]">
           <table className="w-full text-left text-xs font-mono-num">
-            <thead className="bg-[#0b1120] text-slate-400 border-b border-slate-800">
+            <thead className="bg-[#090B10] text-slate-400 border-b border-white/[0.08]">
               <tr>
                 <th className="py-2.5 px-3">Problem</th>
                 <th className="py-2.5 px-3 text-right">RMSE (MW)</th>
@@ -211,19 +211,19 @@ export function KsldcCompliance() {
                 <th className="py-2.5 px-3 text-right">P10–P90 Cov</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/70 text-slate-200">
+            <tbody className="divide-y divide-white/[0.06] text-slate-200">
               {summaryMatrix.map((row) => (
-                <tr key={row.pid} className="hover:bg-slate-900/60">
-                  <td className="py-2.5 px-3 font-bold text-cyan-300">{row.pid}</td>
+                <tr key={row.pid} className="hover:bg-white/[0.03]">
+                  <td className="py-2.5 px-3 font-bold text-[#8ED8F8]">{row.pid}</td>
                   <td className="py-2.5 px-3 text-right font-bold">{row.rmse.toFixed(2)}</td>
                   <td className="py-2.5 px-3 text-right">{row.mae.toFixed(2)}</td>
                   <td className="py-2.5 px-3 text-right">{row.nmaePct.toFixed(2)}%</td>
                   <td className="py-2.5 px-3 text-right">
                     {row.mapePct !== null ? `${row.mapePct.toFixed(2)}%` : "N/A (Night 0)"}
                   </td>
-                  <td className="py-2.5 px-3 text-right text-emerald-300">{row.r2.toFixed(4)}</td>
-                  <td className="py-2.5 px-3 text-right text-emerald-300">+{row.skillPct.toFixed(1)}%</td>
-                  <td className="py-2.5 px-3 text-right text-amber-300">{row.dsmInBandPct.toFixed(2)}%</td>
+                  <td className="py-2.5 px-3 text-right text-[#6EE7B7]">{row.r2.toFixed(4)}</td>
+                  <td className="py-2.5 px-3 text-right text-[#6EE7B7]">+{row.skillPct.toFixed(1)}%</td>
+                  <td className="py-2.5 px-3 text-right text-[#F3C669]">{row.dsmInBandPct.toFixed(2)}%</td>
                   <td className="py-2.5 px-3 text-right">
                     {row.coverage80 !== null ? `${row.coverage80.toFixed(1)}%` : "—"}
                   </td>

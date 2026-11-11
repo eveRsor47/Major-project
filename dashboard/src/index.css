@@ -5,17 +5,23 @@
     --font-display: "Space Grotesk", system-ui, sans-serif;
     --font-sans: "Inter", system-ui, sans-serif;
     --font-mono: "JetBrains Mono", ui-monospace, monospace;
+    --bg-canvas: #07080b;
+    --bg-panel: #0d1017;
+    --accent-solar: #e5a93c;
+    --accent-grid: #5cb8e4;
   }
 
   body {
     font-family: var(--font-sans);
-    background-color: #060911;
-    color: #e2e8f0;
+    background-color: var(--bg-canvas);
+    color: #edf2f7;
     overflow-x: hidden;
+    letter-spacing: -0.01em;
   }
 
   h1, h2, h3, .font-display {
     font-family: var(--font-display);
+    letter-spacing: -0.025em;
   }
 
   .font-mono-num {
@@ -24,41 +30,76 @@
   }
 }
 
-/* Precision CAD hairline surfaces */
+/* Architectural frosted graphite glass surfaces */
 .cad-panel {
-  background: linear-gradient(160deg, rgba(13, 19, 34, 0.92), rgba(8, 12, 22, 0.96));
-  border: 1px solid rgba(56, 189, 248, 0.16);
-  box-shadow: 0 12px 40px -16px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(12px);
+  background: linear-gradient(170deg, rgba(18, 22, 31, 0.84), rgba(10, 12, 18, 0.94));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 20px 50px -24px rgba(0, 0, 0, 0.85),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
 }
 
 .cad-panel-amber {
-  background: linear-gradient(160deg, rgba(20, 16, 12, 0.9), rgba(10, 13, 22, 0.96));
-  border: 1px solid rgba(245, 158, 11, 0.25);
-  box-shadow: 0 12px 40px -16px rgba(245, 158, 11, 0.15), inset 0 1px 0 rgba(245, 158, 11, 0.08);
+  background: linear-gradient(165deg, rgba(28, 23, 15, 0.82), rgba(11, 13, 19, 0.94));
+  border: 1px solid rgba(229, 169, 60, 0.24);
+  box-shadow:
+    0 20px 50px -24px rgba(0, 0, 0, 0.85),
+    inset 0 1px 0 rgba(229, 169, 60, 0.12);
+  backdrop-filter: blur(16px);
 }
 
+/* Subtle architectural micro-mesh (very restrained opacity) */
 .cad-grid-bg {
   background-image:
-    linear-gradient(to right, rgba(56, 189, 248, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(56, 189, 248, 0.04) 1px, transparent 1px);
-  background-size: 32px 32px;
+    radial-gradient(circle at 18% 0%, rgba(92, 184, 228, 0.06), transparent 45%),
+    radial-gradient(circle at 82% 8%, rgba(229, 169, 60, 0.05), transparent 40%),
+    linear-gradient(to right, rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px;
 }
 
-/* Custom sleek scrollbars */
+/* Refined custom range sliders */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #edf2f7;
+  border: 2px solid #5cb8e4;
+  box-shadow: 0 0 10px rgba(92, 184, 228, 0.5);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.18);
+}
+
+/* Slim architectural scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #060911;
+  background: #07080b;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(56, 189, 248, 0.25);
+  background: rgba(255, 255, 255, 0.14);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(56, 189, 248, 0.45);
+  background: rgba(255, 255, 255, 0.28);
 }
 
 @media print {
@@ -69,10 +110,10 @@
     background: #ffffff !important;
     color: #0f172a !important;
   }
-  .cad-panel {
+  .cad-panel,
+  .cad-panel-amber {
     background: #ffffff !important;
     border: 1px solid #cbd5e1 !important;
     box-shadow: none !important;
   }
 }
-

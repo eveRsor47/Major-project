@@ -67,7 +67,7 @@ export function CloudRadar() {
           type: "line",
           data: band,
           lineStyle: { opacity: 0 },
-          areaStyle: { color: "rgba(245,158,11,0.18)" },
+          areaStyle: { color: "rgba(229,169,60,0.16)" },
           stack: "shock-pi",
           symbol: "none",
         },
@@ -75,11 +75,11 @@ export function CloudRadar() {
           name: "Actual Solar (S1)",
           type: "line",
           data: s1.y_true.slice(start, end),
-          lineStyle: { width: 2.5, color: "#F8FAFC" },
+          lineStyle: { width: 2.5, color: "#EDF2F7" },
           markLine: {
             silent: true,
             symbol: "none",
-            lineStyle: { color: "#EF4444", type: "dashed", width: 1.5 },
+            lineStyle: { color: "#F46060", type: "dashed", width: 1.5 },
             data: [{ xAxis: focusIdx - start }],
             label: { formatter: "SHOCK HR", color: "#FCA5A5", fontSize: 10 },
           },
@@ -88,7 +88,7 @@ export function CloudRadar() {
           name: "Champion Pred",
           type: "line",
           data: s1.y_pred_post.slice(start, end),
-          lineStyle: { width: 2.2, color: "#06B6D4" },
+          lineStyle: { width: 2.2, color: "#5CB8E4" },
         },
       ],
     };
@@ -138,7 +138,7 @@ export function CloudRadar() {
         {
           type: "scatter",
           symbolSize: 6,
-          itemStyle: { color: "rgba(245, 158, 11, 0.7)" },
+          itemStyle: { color: "rgba(229, 169, 60, 0.72)" },
           data: pts,
         },
       ],
@@ -164,7 +164,7 @@ export function CloudRadar() {
             Weather shock detection &amp; Quantile P10–P90 risk interval expansion around steepest real solar transients
           </p>
         </div>
-        <span className="rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-1 text-xs font-mono-num text-cyan-200">
+        <span className="rounded-full border border-[#5CB8E4]/35 bg-[#5CB8E4]/10 px-3 py-1 text-xs font-mono-num text-[#8ED8F8]">
           14.281°N, 77.425°E · Alt 600m
         </span>
       </div>
@@ -173,7 +173,7 @@ export function CloudRadar() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         {/* Doppler Radar */}
         <div data-tour-id="cr-radar" className="lg:col-span-5 cad-panel rounded-2xl p-4 flex flex-col items-center justify-between">
-          <div className="w-full flex items-center justify-between text-xs font-mono-num text-cyan-300 mb-2">
+          <div className="w-full flex items-center justify-between text-xs font-mono-num text-[#8ED8F8] mb-2">
             <span className="flex items-center gap-1.5">
               <Compass className="w-4 h-4" /> DOPPLER IRRADIANCE SWEEP
             </span>
@@ -183,15 +183,15 @@ export function CloudRadar() {
           <svg viewBox="0 0 260 260" className="w-56 h-56 my-2 overflow-visible">
             <defs>
               <radialGradient id="radar-cloud" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="rgba(245,158,11,0.35)" />
-                <stop offset="100%" stopColor="rgba(6,182,212,0.04)" />
+                <stop offset="0%" stopColor="rgba(229,169,60,0.28)" />
+                <stop offset="100%" stopColor="rgba(92,184,228,0.03)" />
               </radialGradient>
             </defs>
-            <circle cx="130" cy="130" r="110" fill="url(#radar-cloud)" stroke="rgba(56,189,248,0.28)" />
-            <circle cx="130" cy="130" r="74" fill="none" stroke="rgba(56,189,248,0.18)" strokeDasharray="3 4" />
-            <circle cx="130" cy="130" r="38" fill="none" stroke="rgba(56,189,248,0.2)" />
-            <line x1="20" y1="130" x2="240" y2="130" stroke="rgba(148,163,184,0.16)" />
-            <line x1="130" y1="20" x2="130" y2="240" stroke="rgba(148,163,184,0.16)" />
+            <circle cx="130" cy="130" r="110" fill="url(#radar-cloud)" stroke="rgba(92,184,228,0.28)" />
+            <circle cx="130" cy="130" r="74" fill="none" stroke="rgba(92,184,228,0.18)" strokeDasharray="3 4" />
+            <circle cx="130" cy="130" r="38" fill="none" stroke="rgba(92,184,228,0.2)" />
+            <line x1="20" y1="130" x2="240" y2="130" stroke="rgba(148,163,184,0.14)" />
+            <line x1="130" y1="20" x2="130" y2="240" stroke="rgba(148,163,184,0.14)" />
 
             {/* Cloud Opacity Blob scaled to real cloud_cover% */}
             <circle
@@ -207,31 +207,31 @@ export function CloudRadar() {
               transition={{ duration: 4.5, repeat: Infinity, ease: "linear" }}
               style={{ transformOrigin: "130px 130px" }}
             >
-              <path d="M 130 130 L 130 20 A 110 110 0 0 1 205 55 Z" fill="rgba(6,182,212,0.18)" />
-              <line x1="130" y1="130" x2="130" y2="20" stroke="#38BDF8" strokeWidth="2" />
+              <path d="M 130 130 L 130 20 A 110 110 0 0 1 205 55 Z" fill="rgba(92,184,228,0.16)" />
+              <line x1="130" y1="130" x2="130" y2="20" stroke="#5CB8E4" strokeWidth="2" />
             </motion.g>
 
             {/* Center Pavagada Pin */}
-            <circle cx="130" cy="130" r="5" fill="#FBBF24" />
+            <circle cx="130" cy="130" r="5" fill="#E5A93C" />
             <text x="130" y="254" textAnchor="middle" fill="#94A3B8" fontSize="10" fontFamily="JetBrains Mono">
               PAVAGADA BUS CENTER
             </text>
           </svg>
 
           <div className="w-full grid grid-cols-3 gap-2 text-center font-mono-num text-xs mt-2">
-            <div className="rounded-lg bg-slate-900/80 border border-slate-800 p-2">
+            <div className="rounded-lg bg-white/[0.03] border border-white/[0.08] p-2">
               <div className="text-[10px] text-slate-400">CLOUD COVER</div>
-              <div className="text-sm font-bold text-cyan-300">{cloudNow.toFixed(0)}%</div>
+              <div className="text-sm font-bold text-[#8ED8F8]">{cloudNow.toFixed(0)}%</div>
             </div>
-            <div className="rounded-lg bg-slate-900/80 border border-slate-800 p-2">
+            <div className="rounded-lg bg-white/[0.03] border border-white/[0.08] p-2">
               <div className="text-[10px] text-slate-400 flex items-center justify-center gap-1">
                 <Wind className="w-3 h-3" /> WIND
               </div>
               <div className="text-sm font-bold text-white">{windNow.toFixed(1)} m/s</div>
             </div>
-            <div className="rounded-lg bg-slate-900/80 border border-slate-800 p-2">
+            <div className="rounded-lg bg-white/[0.03] border border-white/[0.08] p-2">
               <div className="text-[10px] text-slate-400">CLEAR RATIO</div>
-              <div className="text-sm font-bold text-amber-300">{(clearIndex * 100).toFixed(0)}%</div>
+              <div className="text-sm font-bold text-[#F3C669]">{(clearIndex * 100).toFixed(0)}%</div>
             </div>
           </div>
         </div>
@@ -240,7 +240,7 @@ export function CloudRadar() {
         <div data-tour-id="cr-shocks" className="lg:col-span-7 cad-panel rounded-2xl p-4 flex flex-col">
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-display text-sm font-bold text-white flex items-center gap-1.5">
-              <CloudLightning className="w-4 h-4 text-amber-400" />
+              <CloudLightning className="w-4 h-4 text-[#E5A93C]" />
               Detected Top Micro-Ramp Shocks ({shockEvents.length} Events)
             </h2>
             <span className="text-[11px] font-mono-num text-slate-400">Click event to inspect P10–P90 window</span>
@@ -260,15 +260,15 @@ export function CloudRadar() {
                   }}
                   className={`text-left rounded-xl border p-2.5 transition cursor-pointer ${
                     active
-                      ? "border-amber-400 bg-amber-500/12 shadow-[0_0_16px_rgba(245,158,11,0.18)]"
-                      : "border-slate-800 bg-slate-900/60 hover:border-slate-600"
+                      ? "border-[#E5A93C] bg-[#E5A93C]/12 shadow-[0_0_16px_rgba(229,169,60,0.18)]"
+                      : "border-white/[0.08] bg-white/[0.03] hover:border-white/25"
                   }`}
                 >
                   <div className="flex items-center justify-between text-[11px] font-mono-num">
                     <span className="text-slate-300">{ev.timestamp.replace("T", " ")}</span>
                     <span
                       className={`rounded px-1.5 py-0.5 text-[10px] font-bold ${
-                        isDrop ? "bg-red-500/20 text-red-300" : "bg-emerald-500/20 text-emerald-300"
+                        isDrop ? "bg-[#F46060]/20 text-[#FCA5A5]" : "bg-[#34D399]/20 text-[#6EE7B7]"
                       }`}
                     >
                       {ev.delta_mw >= 0 ? "+" : ""}
@@ -279,7 +279,7 @@ export function CloudRadar() {
                     <span className="text-slate-400">
                       Cloud <strong className="text-slate-200">{ev.cloud_cover_pct}%</strong> · GHI {ev.ghi_wm2}
                     </span>
-                    <span className="text-cyan-300">PI ±{(ev.pi_width_mw / 2).toFixed(0)} MW</span>
+                    <span className="text-[#8ED8F8]">PI ±{(ev.pi_width_mw / 2).toFixed(0)} MW</span>
                   </div>
                 </button>
               );
@@ -293,11 +293,11 @@ export function CloudRadar() {
         <div className="xl:col-span-7 cad-panel rounded-2xl p-4">
           <div className="flex items-center justify-between mb-2">
             <h3 className="font-display text-sm font-bold text-white flex items-center gap-1.5">
-              <AlertCircle className="w-4 h-4 text-red-400" />
+              <AlertCircle className="w-4 h-4 text-[#F46060]" />
               Quantile Risk Envelope Around Shock Window (±14h)
             </h3>
             {activeShock && (
-              <span className="text-xs font-mono-num text-amber-300">
+              <span className="text-xs font-mono-num text-[#F3C669]">
                 P90–P10 Width: {activeShock.pi_width_mw.toFixed(1)} MW
               </span>
             )}
@@ -308,7 +308,7 @@ export function CloudRadar() {
         <div data-tour-id="cr-thermal" className="xl:col-span-5 cad-panel rounded-2xl p-4">
           <div className="flex items-center justify-between mb-2">
             <h3 className="font-display text-sm font-bold text-white flex items-center gap-1.5">
-              <Thermometer className="w-4 h-4 text-amber-400" />
+              <Thermometer className="w-4 h-4 text-[#E5A93C]" />
               PV Cell Module Temp vs Efficiency Derating
             </h3>
             <span className="text-[11px] font-mono-num text-slate-400">Daytime GHI &gt; 250 W/m²</span>

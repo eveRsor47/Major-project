@@ -105,7 +105,7 @@ export function MissionControl() {
         type: "line",
         data: bandWidth,
         lineStyle: { opacity: 0 },
-        areaStyle: { color: "rgba(56, 189, 248, 0.14)" },
+        areaStyle: { color: "rgba(92, 184, 228, 0.12)" },
         stack: "pi-band",
         symbol: "none",
       },
@@ -114,17 +114,17 @@ export function MissionControl() {
         type: "line",
         data: yTrue,
         showSymbol: false,
-        lineStyle: { width: 2.4, color: "#F8FAFC" },
-        itemStyle: { color: "#F8FAFC" },
+        lineStyle: { width: 2.3, color: "#EDF2F7" },
+        itemStyle: { color: "#EDF2F7" },
         markArea: {
           silent: true,
-          itemStyle: { color: "rgba(15, 23, 42, 0.45)" },
+          itemStyle: { color: "rgba(7, 8, 11, 0.55)" },
           data: nightAreas,
         },
         markLine: {
           silent: true,
           symbol: "none",
-          lineStyle: { color: "#F59E0B", type: "dashed", width: 1.5 },
+          lineStyle: { color: "#E5A93C", type: "dashed", width: 1.4 },
           data: [{ xAxis: cursorOffset }],
           label: { show: false },
         },
@@ -134,8 +134,8 @@ export function MissionControl() {
         type: "line",
         data: yPost,
         showSymbol: false,
-        lineStyle: { width: 2.3, color: "#06B6D4" },
-        itemStyle: { color: "#06B6D4" },
+        lineStyle: { width: 2.2, color: "#5CB8E4" },
+        itemStyle: { color: "#5CB8E4" },
       },
       {
         name: "Persistence Baseline",
@@ -233,7 +233,7 @@ export function MissionControl() {
           smooth: true,
           showSymbol: false,
           data: ds.duck_curve.true_demand.slice(dayStart, dayEnd),
-          lineStyle: { width: 2, color: "#38BDF8" },
+          lineStyle: { width: 2, color: "#5CB8E4" },
         },
         {
           name: "Pred Net Load",
@@ -241,14 +241,14 @@ export function MissionControl() {
           smooth: true,
           showSymbol: false,
           data: ds.duck_curve.pred_net_load.slice(dayStart, dayEnd),
-          lineStyle: { width: 2.4, color: "#10B981" },
-          areaStyle: { color: "rgba(16, 185, 129, 0.08)" },
+          lineStyle: { width: 2.4, color: "#34D399" },
+          areaStyle: { color: "rgba(52, 211, 153, 0.07)" },
         },
         {
           name: "Pavagada Solar",
           type: "bar",
           data: ds.duck_curve.true_solar.slice(dayStart, dayEnd),
-          itemStyle: { color: "rgba(245, 158, 11, 0.48)", borderRadius: [3, 3, 0, 0] },
+          itemStyle: { color: "rgba(229, 169, 60, 0.45)", borderRadius: [3, 3, 0, 0] },
         },
       ],
     };
@@ -293,7 +293,7 @@ export function MissionControl() {
       {/* 1. HERO TELEMETRY KPI BAR */}
       <section data-tour-id="mc-hero-kpis" className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5">
         <div className="cad-panel-amber rounded-2xl p-4">
-          <div className="flex items-center justify-between text-xs text-amber-300 font-mono-num">
+          <div className="flex items-center justify-between text-xs text-[#F3C669] font-mono-num">
             <span className="flex items-center gap-1.5">
               <Sun className="w-4 h-4" /> PAVAGADA SOLAR OUTPUT
             </span>
@@ -301,34 +301,34 @@ export function MissionControl() {
           </div>
           <div className="mt-2 flex items-baseline gap-2 font-mono-num">
             <span className="text-2xl font-bold text-white">{solarTrue.toFixed(1)} MW</span>
-            <span className="text-xs text-amber-300/80">Pred {solarPred.toFixed(1)}</span>
+            <span className="text-xs text-[#F3C669]/80">Pred {solarPred.toFixed(1)}</span>
           </div>
-          <div className="mt-2.5 h-1.5 w-full rounded-full bg-slate-800 overflow-hidden">
+          <div className="mt-2.5 h-1.5 w-full rounded-full bg-white/[0.08] overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-amber-500 to-yellow-300 transition-all duration-300"
+              className="h-full bg-gradient-to-r from-[#C98A22] to-[#F5D076] transition-all duration-300"
               style={{ width: `${Math.min(100, (solarTrue / 2050) * 100)}%` }}
             />
           </div>
         </div>
 
         <div className="cad-panel rounded-2xl p-4">
-          <div className="flex items-center justify-between text-xs text-cyan-300 font-mono-num">
+          <div className="flex items-center justify-between text-xs text-[#8ED8F8] font-mono-num">
             <span className="flex items-center gap-1.5">
               <Zap className="w-4 h-4" /> KARNATAKA STATE DEMAND
             </span>
-            <span className="text-emerald-400">50.00 Hz</span>
+            <span className="text-[#34D399]">50.00 Hz</span>
           </div>
           <div className="mt-2 flex items-baseline gap-2 font-mono-num">
             <span className="text-2xl font-bold text-white">{demandTrue.toFixed(1)} MW</span>
-            <span className="text-xs text-cyan-300/80">Pred {demandPred.toFixed(1)}</span>
+            <span className="text-xs text-[#8ED8F8]/80">Pred {demandPred.toFixed(1)}</span>
           </div>
           <div className="mt-2 text-[11px] font-mono-num text-slate-400">
             D1 Champion Test MAPE: 0.96% · RMSE: 160.28 MW
           </div>
         </div>
 
-        <div className="cad-panel rounded-2xl p-4 border-emerald-500/25">
-          <div className="flex items-center justify-between text-xs text-emerald-300 font-mono-num">
+        <div className="cad-panel rounded-2xl p-4 border-[#34D399]/25">
+          <div className="flex items-center justify-between text-xs text-[#6EE7B7] font-mono-num">
             <span className="flex items-center gap-1.5">
               <Flame className="w-4 h-4" /> NET LOAD (DUCK CURVE)
             </span>
@@ -336,7 +336,7 @@ export function MissionControl() {
           </div>
           <div className="mt-2 flex items-baseline gap-2 font-mono-num">
             <span className="text-2xl font-bold text-white">{netTrue.toFixed(1)} MW</span>
-            <span className="text-xs text-emerald-300/80">Pred {netPred.toFixed(1)}</span>
+            <span className="text-xs text-[#6EE7B7]/80">Pred {netPred.toFixed(1)}</span>
           </div>
           <div className="mt-2 text-[11px] font-mono-num text-slate-400">
             Delta Error: {Math.abs(netPred - netTrue).toFixed(1)} MW · Hourly Δ {netRamp >= 0 ? "+" : ""}
@@ -347,7 +347,7 @@ export function MissionControl() {
         <div className="cad-panel rounded-2xl p-4">
           <div className="flex items-center justify-between text-xs text-slate-300 font-mono-num">
             <span className="flex items-center gap-1.5">
-              <Gauge className="w-4 h-4 text-cyan-400" /> RAMP &amp; M9 SAFETY STATUS
+              <Gauge className="w-4 h-4 text-[#5CB8E4]" /> RAMP &amp; M9 SAFETY STATUS
             </span>
             <span className={`rounded px-1.5 py-0.5 text-[10px] border ${rampSeverity.color}`}>
               {rampSeverity.label}
@@ -361,14 +361,14 @@ export function MissionControl() {
             <span
               className={`inline-flex items-center gap-1 rounded px-2 py-0.5 border ${
                 isNight
-                  ? "border-indigo-400/50 bg-indigo-500/15 text-indigo-200"
-                  : "border-amber-400/30 bg-amber-500/10 text-amber-200"
+                  ? "border-slate-400/40 bg-slate-500/15 text-slate-200"
+                  : "border-[#E5A93C]/35 bg-[#E5A93C]/10 text-[#F3C669]"
               }`}
             >
               {isNight ? <Moon className="w-3 h-3" /> : <Sun className="w-3 h-3" />}
               {isNight ? `Zenith ${zenithNow.toFixed(1)}° → 0 MW Lock` : `Day Zenith ${zenithNow.toFixed(1)}°`}
             </span>
-            <span className="inline-flex items-center gap-1 rounded px-2 py-0.5 border border-emerald-500/35 bg-emerald-500/10 text-emerald-300">
+            <span className="inline-flex items-center gap-1 rounded px-2 py-0.5 border border-[#34D399]/35 bg-[#34D399]/10 text-[#6EE7B7]">
               <ShieldCheck className="w-3 h-3" /> Ramp Gate OK
             </span>
           </div>
@@ -385,12 +385,12 @@ export function MissionControl() {
               <button
                 key={pid}
                 onClick={() => setProblem(pid)}
-                className={`rounded-xl px-3 py-1.5 text-xs font-medium transition cursor-pointer ${
+                className={`rounded-full px-3.5 py-1.5 text-xs font-medium transition cursor-pointer ${
                   active
                     ? meta.targetType === "Solar"
-                      ? "bg-amber-400 text-slate-950 font-bold shadow-[0_0_18px_rgba(245,158,11,0.35)]"
-                      : "bg-cyan-400 text-slate-950 font-bold shadow-[0_0_18px_rgba(6,182,212,0.35)]"
-                    : "border border-slate-700 bg-slate-900/70 text-slate-300 hover:border-slate-500"
+                      ? "bg-[#E5A93C] text-[#07080B] font-bold shadow-sm"
+                      : "bg-[#5CB8E4] text-[#07080B] font-bold shadow-sm"
+                    : "border border-white/10 bg-white/[0.03] text-slate-300 hover:border-white/25"
                 }`}
               >
                 <span className="font-mono-num font-bold">{meta.code}</span>{" "}
@@ -412,14 +412,14 @@ export function MissionControl() {
           </div>
           <div>
             <span className="text-slate-400">R²:</span>{" "}
-            <span className="text-emerald-400 font-bold">{splitMetrics.r2.toFixed(4)}</span>
+            <span className="text-[#34D399] font-bold">{splitMetrics.r2.toFixed(4)}</span>
           </div>
           <div>
             <span className="text-slate-400">Skill:</span>{" "}
-            <span className="text-cyan-300 font-bold">+{splitMetrics.skillPct.toFixed(1)}%</span>
+            <span className="text-[#8ED8F8] font-bold">+{splitMetrics.skillPct.toFixed(1)}%</span>
           </div>
           {champTestRow && activeSplit === "test_2026" && (
-            <span className="rounded bg-emerald-500/15 border border-emerald-500/35 px-2 py-0.5 text-[10px] text-emerald-300">
+            <span className="rounded bg-[#34D399]/12 border border-[#34D399]/35 px-2 py-0.5 text-[10px] text-[#6EE7B7]">
               M10 Official: {champTestRow.rmse.toFixed(2)} MW
             </span>
           )}
@@ -433,12 +433,12 @@ export function MissionControl() {
             <div>
               <h2 className="font-display text-sm sm:text-base font-bold text-white">
                 {PROBLEM_META[activeProblem].title} ({PROBLEM_META[activeProblem].horizon}) ·{" "}
-                <span className="text-cyan-300 font-mono-num">
+                <span className="text-[#8ED8F8] font-mono-num">
                   {activeSplit === "test_2026" ? "Test 2026" : "Val 2025"}
                 </span>
               </h2>
               <p className="text-[11px] text-slate-400">
-                Solid White = True Telemetry · Neon Cyan = Champion + M9 · Shaded Band = Quantile P10–P90 · Dark Vertical Zones = Night Zenith ≥ 90°
+                Platinum = True Telemetry · Glacier Azure = Champion + M9 · Shaded = Quantile P10–P90 · Night Shading = Zenith ≥ 90°
               </p>
             </div>
 
@@ -447,8 +447,8 @@ export function MissionControl() {
                 onClick={() => setShowMembers((v) => !v)}
                 className={`rounded-lg px-2.5 py-1 border font-mono-num transition cursor-pointer ${
                   showMembers
-                    ? "border-cyan-400/60 bg-cyan-500/15 text-cyan-200"
-                    : "border-slate-700 bg-slate-900/70 text-slate-400 hover:text-slate-200"
+                    ? "border-[#5CB8E4]/60 bg-[#5CB8E4]/15 text-[#8ED8F8]"
+                    : "border-white/10 bg-white/[0.03] text-slate-400 hover:text-slate-200"
                 }`}
               >
                 {showMembers ? "Hide 5 DL Traces" : "Overlay 5 DL Traces"}
@@ -456,7 +456,7 @@ export function MissionControl() {
               <select
                 value={windowHours}
                 onChange={(e) => setWindowHours(Number(e.target.value))}
-                className="rounded-lg border border-slate-700 bg-slate-900 px-2 py-1 text-xs font-mono-num text-slate-200"
+                className="rounded-lg border border-white/10 bg-[#0D1017] px-2 py-1 text-xs font-mono-num text-slate-200"
               >
                 <option value={72}>72h Window</option>
                 <option value={120}>120h (5d)</option>
@@ -471,17 +471,17 @@ export function MissionControl() {
         {/* Duck Curve & Local Physical Snapshot */}
         <div className="xl:col-span-4 space-y-4">
           <div className="cad-panel rounded-2xl p-4">
-            <div className="flex items-center justify-between mb-2">
-              <div>
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <div className="min-w-0">
                 <h3 className="font-display text-sm font-bold text-white">
                   Daily Duck Curve Conservation
                 </h3>
-                <p className="text-[11px] font-mono-num text-slate-400">
-                  Day Slice: {tsNow.slice(0, 10)} · Net = Demand - Solar
+                <p className="text-[11px] font-mono-num text-slate-400 truncate">
+                  Day: {tsNow.slice(0, 10)} · Net = Demand - Solar
                 </p>
               </div>
-              <span className="rounded px-2 py-0.5 text-[10px] font-mono-num bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
-                161.35 MW 1h Net RMSE
+              <span className="shrink-0 whitespace-nowrap rounded px-2 py-0.5 text-[10px] font-mono-num bg-[#34D399]/12 text-[#6EE7B7] border border-[#34D399]/30">
+                161.35 MW Net RMSE
               </span>
             </div>
             <EChartBox option={duckOption} height={240} />
@@ -489,27 +489,27 @@ export function MissionControl() {
 
           <div className="cad-panel rounded-2xl p-4 space-y-2.5 text-xs">
             <div className="font-display font-semibold text-white flex items-center gap-1.5">
-              <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+              <AlertTriangle className="w-3.5 h-3.5 text-[#E5A93C]" />
               Hourly Weather &amp; Risk Interval Snapshot
             </div>
             <div className="grid grid-cols-2 gap-2 font-mono-num">
-              <div className="rounded-lg bg-slate-900/80 border border-slate-800 p-2">
+              <div className="rounded-lg bg-white/[0.03] border border-white/[0.07] p-2">
                 <div className="text-[10px] text-slate-400">GHI / CLEARSKY</div>
-                <div className="text-sm font-bold text-amber-300">
+                <div className="text-sm font-bold text-[#F3C669]">
                   {ds.weather.ghi[idx].toFixed(0)} / {ds.weather.clearsky_ghi[idx].toFixed(0)} W/m²
                 </div>
               </div>
-              <div className="rounded-lg bg-slate-900/80 border border-slate-800 p-2">
+              <div className="rounded-lg bg-white/[0.03] border border-white/[0.07] p-2">
                 <div className="text-[10px] text-slate-400">CLOUD COVER</div>
-                <div className="text-sm font-bold text-cyan-300">{ds.weather.cloud_cover[idx].toFixed(0)}%</div>
+                <div className="text-sm font-bold text-[#8ED8F8]">{ds.weather.cloud_cover[idx].toFixed(0)}%</div>
               </div>
-              <div className="rounded-lg bg-slate-900/80 border border-slate-800 p-2">
+              <div className="rounded-lg bg-white/[0.03] border border-white/[0.07] p-2">
                 <div className="text-[10px] text-slate-400">80% PI (P10 ↔ P90)</div>
                 <div className="text-sm font-bold text-white">
                   {ds.problems[activeProblem].p10[idx].toFixed(0)}–{ds.problems[activeProblem].p90[idx].toFixed(0)} MW
                 </div>
               </div>
-              <div className="rounded-lg bg-slate-900/80 border border-slate-800 p-2">
+              <div className="rounded-lg bg-white/[0.03] border border-white/[0.07] p-2">
                 <div className="text-[10px] text-slate-400">AMBIENT / MOD TEMP</div>
                 <div className="text-sm font-bold text-slate-200">
                   {ds.weather.temp[idx].toFixed(1)}° / {ds.weather.module_temp[idx].toFixed(1)}°C
@@ -524,7 +524,7 @@ export function MissionControl() {
       <section data-tour-id="mc-time-scrubber" className="cad-panel rounded-2xl px-4 py-3 flex flex-wrap items-center gap-3">
         <button
           onClick={() => setIsPlaying(!isPlaying)}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-cyan-500 px-3 py-1.5 text-xs font-semibold text-slate-950 hover:bg-cyan-400 transition cursor-pointer shrink-0"
+          className="inline-flex items-center gap-1.5 rounded-full bg-[#EDF2F7] px-3.5 py-1.5 text-xs font-semibold text-[#07080B] hover:bg-white transition cursor-pointer shrink-0"
         >
           {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
           <span>{isPlaying ? "Pause" : "Simulate Stream"}</span>
@@ -540,11 +540,11 @@ export function MissionControl() {
               setIsPlaying(false);
               setCursorIndex(Number(e.target.value));
             }}
-            className="w-full accent-cyan-400 cursor-pointer"
+            className="w-full cursor-pointer"
           />
         </div>
 
-        <div className="text-xs font-mono-num text-cyan-200 shrink-0">
+        <div className="text-xs font-mono-num text-[#8ED8F8] shrink-0">
           {tsNow} IST <span className="text-slate-500">({idx + 1}/{ds.count})</span>
         </div>
       </section>
