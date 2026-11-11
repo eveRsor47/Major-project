@@ -1,0 +1,57 @@
+{
+  "brand": "GridPulse",
+  "site": {
+    "name": "Pavagada Ultra Mega Solar Park",
+    "region": "Tumkur District, Karnataka, India",
+    "grid_authority": "KSLDC (Karnataka State Load Despatch Centre)",
+    "capacity_mw": 2050.0,
+    "sections": 8,
+    "section_capacity_mw": 256.25,
+    "latitude": 14.281,
+    "longitude": 77.425,
+    "altitude_m": 600.0,
+    "area_acres": 13000
+  },
+  "dataset": {
+    "total_hours": 43824,
+    "train_range": "2021-03-01 to 2024-12-31 (33,480 hrs)",
+    "val_range": "2025-01-01 to 2025-12-31 (8,760 raw / 8,737 seq hrs)",
+    "test_range": "2026-01-01 to 2026-02-28 (1,416 raw / 1,393 seq hrs \u2014 Quarantined)"
+  },
+  "verification": {
+    "pytest_passed": 92,
+    "pytest_total": 92,
+    "models_evaluated_test": 148,
+    "dl_champions": 5,
+    "optuna_studies": 20,
+    "champion_pipeline": "Stacking Ridge + M9 Physical Constraints",
+    "constraints": {
+      "solar_night_zenith_deg": 90.0,
+      "solar_capacity_mw": [
+        0.0,
+        2050.0
+      ],
+      "solar_max_ramp_mw_hr": 1000.0,
+      "demand_bounds_mw": [
+        4000.0,
+        20000.0
+      ]
+    }
+  },
+  "bundles": {
+    "test_2026": {
+      "file": "test_2026.json",
+      "count": 1393,
+      "size_kb": 725.7
+    },
+    "val_2025": {
+      "file": "val_2025.json",
+      "count": 8737,
+      "size_kb": 4492.9
+    },
+    "benchmarks": {
+      "file": "benchmarks.json",
+      "size_kb": 75.7
+    }
+  }
+}

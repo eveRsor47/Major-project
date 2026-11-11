@@ -7,6 +7,10 @@ __pycache__/
 *.egg-info/
 dist/
 build/
+node_modules/
+dashboard/node_modules/
+dashboard/dist/
+*.tsbuildinfo
 .DS_Store
 Thumbs.db
 catboost_info/

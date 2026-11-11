@@ -42,6 +42,15 @@ Models are evaluated across 4 problems (**S1, S24, D1, D24**) through a validati
 ## 3. Directory & Notebook Layout
 ```
 MAJOR PROJECT/
+├── dashboard/               # M11: GridPulse Interactive React + ECharts Frontend
+│   ├── public/data/         # Verified JSON telemetry bundles (test_2026, val_2025, benchmarks, manifest)
+│   ├── public/favicon.svg   # GridPulse d ↔ p Yin-Yang brand icon
+│   ├── src/
+│   │   ├── components/      # StoryIntro (5-scene animation), GridPulseLogo (d ↔ p swing), SpotlightTour, ControlRoomShell
+│   │   ├── rooms/           # MissionControl, NeuralMixer, CloudRadar, DigitalTwin, VivaWarRoom, KsldcCompliance
+│   │   ├── store/           # Zustand real-time telemetry state & tour manager
+│   │   └── utils/           # Live RMSE/MAE/R²/Skill computation, Web Audio SFX & tour guides
+│   └── package.json
 ├── data/
 │   ├── raw/                 # Untouched original file (final_dataset.csv)
 │   ├── interim/             # Cleaned hourly dataset (clean_hourly.csv, .parquet)
@@ -74,6 +83,7 @@ MAJOR PROJECT/
 │   ├── execute_m8.py        # Optuna HPO, quantile LGBM, and ensemble training runner
 │   ├── execute_m9.py        # M9 physical post-processing validation runner
 │   ├── execute_m10.py       # M10 quarantined 2026 test set full-funnel benchmark runner
+│   ├── export_dashboard_data.py # M11 verified telemetry JSON bundle exporter for GridPulse
 │   ├── audit.py             # Data verification and audit report engine
 │   └── evaluate.py          # Unified scoring harness
 ├── tests/
@@ -88,7 +98,8 @@ MAJOR PROJECT/
 │   ├── test_models_dl.py
 │   ├── test_ensemble.py
 │   ├── test_postprocess.py
-│   └── test_m10.py
+│   ├── test_m10.py
+│   └── test_m11_dashboard.py
 ├── results/
 │   ├── tables/              # Evaluation tables, audit logs, and summaries (CSV / MD)
 │   ├── figures/             # Partitioned: eda/, baselines/, linear_statistical/, classic_ml/, deep_learning/
@@ -114,6 +125,11 @@ uv pip install -r requirements.txt --python .venv\Scripts\python.exe
 
 # Run test suite:
 .venv\Scripts\pytest -v
+
+# Launch GridPulse Interactive Frontend:
+cd dashboard
+npm install
+npm run dev
 ```
 
 ---
@@ -136,4 +152,4 @@ uv pip install -r requirements.txt --python .venv\Scripts\python.exe
 | **Commit 11 (`dc47a7a`)** | **M8: Tuning, Probabilistic Models & Ensembles** | Full Optuna Bayesian HPO (35 trials × 3-fold temporal CV) across 5 DL champions on all 4 problems (20 studies). Quantile LightGBM probabilistic forecasting (P10/P50/P90, 83.4% empirical coverage on S1, 82.4% on S24). Built 4 formal ensemble methods: Equal-Weight, Non-Negative Least Squares (NNLS), Stacking Ridge, and Residual Hybrid. All-time benchmark records: Stacking Ridge achieved RMSE 41.29 MW (+80.44% Skill) on S1, 48.60 MW (+77.10% Skill) on S24, 162.34 MW (+75.77% Skill) on D1, and 372.82 MW (+51.66% Skill) on D24. Generated `results/tables/m8_ensemble_results.csv`, `m8_seasonal_results.csv`, saved 20 tuned `.pt` models, 8 diagnostic figures to `results/figures/m8_ensemble/`, and passed 24 unit tests. | **VERIFIED (24/24 Tests Pass)** |
 | **Commit 12 (`4d08a30` / `c1f1ef6`)** | **M9: Physical Constraints & Post-Processing** | Implemented `src/postprocess.py` and `src/execute_m9.py`. Enforced strict solar night clipping ($0.00$ MW when solar zenith $\ge 90^\circ$ or clear-sky GHI $\le 0$), physical capacity bounds $[0, 2050]$ MW, physical Pavagada sunrise/cloud ramp-rate limiter ($\le 1000$ MW/hr), and Karnataka grid demand bounds $[4000, 20000]$ MW. Enforced conservation of energy Duck Curve net load identity ($\text{Net Load} = \text{Demand} - \text{Solar}$). Post-processing further boosted validation accuracy: Stacking Ridge on S1 improved to RMSE 41.13 MW (**+80.51% Skill**), on S24 to 48.25 MW (**+77.26% Skill**). Generated `results/tables/m9_postprocessing_results.csv`, `results/figures/m9_postprocessing/duck_curve_net_load.png`, and passed 7 unit tests (84/84 full suite passing). | **VERIFIED (84/84 Tests Pass)** |
 | **Commit 13 (`d4b7a68`)** | **M10: Test Set Evaluation & Viva Benchmarks** | Implemented `src/execute_m10.py` and unblinded the strictly quarantined Jan–Feb 2026 test set (`N = 1,393` sequence-aligned hours across all 4 problems) with zero test-set leakage. Evaluated full 7-tier model funnel (148 model rows: Baselines, Linear/Stat, Classic ML, Untuned DL, Optuna-Tuned DL, 4 Ensembles, Physical Post-Processed Champion) plus Quantile LightGBM P10/P50/P90 uncertainty intervals and 2025 Val vs 2026 Test generalization audit. Pre-registered Stacking Ridge + Physical Constraints achieved: **S1: 24.95 MW RMSE (+88.76% Skill, $R^2=0.9984$)**, **S24: 29.00 MW RMSE (+80.82% Skill, $R^2=0.9979$)**, **D1: 160.28 MW RMSE (+76.41% Skill, MAPE 0.96%, $R^2=0.9922$)**, **D24: 373.18 MW RMSE (+52.01% Skill, MAPE 2.25%, $R^2=0.9575$)**, and 1-hr Net Load Duck Curve RMSE **161.35 MW ($R^2=0.9903$)**. Generated `results/tables/m10_test_benchmark.csv`, `.md`, `m10_val_vs_test_generalization.csv`, `m10_test_probabilistic.csv`, 17 test prediction parquets, 15 publication-grade figures in `results/figures/m10_test_evaluation/`, and added 8 new integration tests (`tests/test_m10.py`). | **VERIFIED (92/92 Tests Pass)** |
-| *Upcoming* | **M11: Pavagada Grid OS Dashboard** | Interactive 7-screen SCADA-style cyber-industrial web application (React + Vite + Tailwind + Apache ECharts) surfacing live multi-horizon forecasts, real-time interactive ensemble weight mixer, probabilistic uncertainty fan charts, Duck Curve dispatch monitor, and viva defense war room. | *Pending Review* |
+| **M11 (Latest)** | **M11: GridPulse Interactive Frontend Dashboard** | Implemented `src/export_dashboard_data.py` exporting verified M8/M9/M10 JSON telemetry (`test_2026.json` 1,393 hrs, `val_2025.json` 8,737 hrs, `benchmarks.json` 148 test rows, `manifest.json`), plus the full React 19 + TypeScript + Tailwind + Apache ECharts `GridPulse` web app in `dashboard/`. Opens with a 5-scene animated narrative story leading into the signature animated **`d ↔ p` Yin-Yang Swing** brand reveal and background telemetry loader, followed by per-room **SVG Spotlight Walkthroughs** (`Skip Tour` / `? Screen Guide`) and 6 specialized KSLDC command rooms: **Mission Control**, **AI Neural Weight Mixer**, **Cloud Radar & Micro-Ramp Interceptor**, **Pavagada 8-Block Spatial Digital Twin**, **Viva Examiner War Room**, and **KSLDC DSM Compliance Suite**. Verified via `vite build`, headless Chromium QA (`1366×768`), and `tests/test_m11_dashboard.py`. | **VERIFIED (97/97 Tests Pass)** |
