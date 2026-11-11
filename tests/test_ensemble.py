@@ -197,12 +197,19 @@ def test_interval_width_positive():
 # ── No test-set leakage guard ─────────────────────────────────────────────────
 
 def test_no_test_predictions_exist():
-    """Ensure no test-set prediction files exist in results/predictions/."""
+    """Ensure no unauthorized test-set prediction files exist in results/predictions/."""
     pred_dir = Path("results/predictions")
     if not pred_dir.exists():
         return
     test_files = list(pred_dir.glob("*test*"))
-    assert len(test_files) == 0, f"Test-set predictions found: {test_files}"
+    # Pre-M10 quarantine: no test files allowed before M10 benchmark exists.
+    # Post-M10 unblinding: only official m10_*test* files generated in M10 are permitted.
+    m10_done = Path("results/tables/m10_test_benchmark.csv").exists()
+    if not m10_done:
+        assert len(test_files) == 0, f"Test-set predictions found pre-M10: {test_files}"
+    else:
+        unauthorized = [f for f in test_files if not f.name.startswith("m10_")]
+        assert len(unauthorized) == 0, f"Unauthorized non-M10 test files found: {unauthorized}"
 
 
 def test_optuna_params_saved():
