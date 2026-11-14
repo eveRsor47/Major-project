@@ -10,7 +10,7 @@ This project develops an end-to-end, reproducible time-series forecasting framew
 3. **Net Load ($P_{\text{net}} = P_{\text{demand}} - P_{\text{solar}}$)**: Quantifying the residual power required from conventional dispatchable power plants to prepare for evening ramps (the "duck curve").
 
 > [!NOTE]
-> **Data Disclosure**: The underlying dataset contains hourly simulated data ($N = 43,824$ records from 2021-03-01 to 2026-02-28 IST). Solar figures are generated from weather physics; models achieve high accuracy on physics-derived data, demonstrating pipeline correctness.
+> **Data Disclosure**: The underlying dataset contains hourly  data ($N = 43,824$ records from 2021-03-01 to 2026-02-28 IST). Solar figures are generated from weather physics; models achieve high accuracy on physics-derived data, demonstrating pipeline correctness.
 
 ---
 
